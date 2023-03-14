@@ -159,4 +159,5 @@ replay_pid*
 .history
 .ionide
 
+.idea/misc.xml
 # End of https://www.toptal.com/developers/gitignore/api/java,v
