@@ -5,4 +5,6 @@ module com.example.campingdekiezelsteen {
 
     opens com.example.campingdekiezelsteen to javafx.fxml;
     exports com.example.campingdekiezelsteen;
+    exports com.example.campingdekiezelsteen.State;
+    opens com.example.campingdekiezelsteen.State to javafx.fxml;
 }

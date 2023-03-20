@@ -1,5 +1,6 @@
 package com.example.campingdekiezelsteen;
 
+import com.example.campingdekiezelsteen.State.Free;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -7,9 +8,12 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Control;
+import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -20,10 +24,12 @@ public class HelloApplication extends Application {
     Color black = Color.rgb(0,0,0);
 
     int amountOfSpots = 60;
+    private Pane pane = new Pane();
 
     @Override
     public void start(Stage stage) throws IOException {
-        Scene scene = new Scene(setupDesign(), 900, 600);
+        Scene scene = new Scene(setupDesign(), 1000, 600);
+        scene.getStylesheets().add(HelloApplication.class.getResource("style.css").toExternalForm());
         stage.setScene(scene);
         stage.show();
     }
@@ -33,12 +39,14 @@ public class HelloApplication extends Application {
         hBox.setFillHeight(true);
         hBox.setBackground(new Background(new BackgroundFill(white, null, null)));
         hBox.getChildren().add(setupGrid());
+        pane.getStyleClass().add("infoBlock");
+        hBox.getChildren().add(pane);
         return hBox;
     }
 
     private GridPane setupGrid(){
         GridPane gridPane = new GridPane();
-        gridPane.setBackground(new Background(new BackgroundFill(lightGray, null, null)));
+        gridPane.getStyleClass().add("bluePrint");
         gridPane.setPrefWidth(700);
         gridPane.setAlignment(Pos.CENTER);
         gridPane.setHgap(10);
@@ -65,7 +73,28 @@ public class HelloApplication extends Application {
     private Button addButton(int spot){
         Button button = new Button(String.valueOf(spot));
         button.setPrefSize(200, 200);
+        // switch case met state:
+        switch (spot) {
+            case 2:
+                button.getStyleClass().add("state-maintenance");
+            case 12:
+                button.getStyleClass().add("state-reserved");
+            default:
+                button.getStyleClass().add("state-free");
+        }
+        button.setOnMouseClicked( e -> {
+            VBox vBox = new VBox();
+            vBox.setPadding(new Insets(20));
+            Label title = new Label("Vrij");
+            title.getStyleClass().add("infoTitle");
+            vBox.getChildren().add(title);
+            setRightPanel(vBox);
+        });
         return button;
+    }
+
+    public void setRightPanel(VBox vBox){
+        pane.getChildren().add(vBox);
     }
 
     public static void main(String[] args) {
