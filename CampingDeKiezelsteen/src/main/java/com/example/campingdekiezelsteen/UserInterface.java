@@ -41,6 +41,7 @@ public class UserInterface extends Application {
         GridPane gridPane = new GridPane();
         gridPane.getStyleClass().add("bluePrint");
         gridPane.setPrefWidth(700);
+        gridPane.setMaxHeight(600);
         gridPane.setAlignment(Pos.CENTER);
         gridPane.setHgap(15);
         gridPane.setVgap(15);
@@ -64,14 +65,11 @@ public class UserInterface extends Application {
     }
 
     private Button addButton(int spotnr) {
+        Spot spot = spotsList.get(spotnr-1);
+        System.out.println(spot.getClass().isAssignableFrom(BringableSpot.class));
         Button button = new Button(String.valueOf(spotnr));
         button.setPrefSize(200, 200);
-        // Gets color from state and gets right style for button:
-        switch (spotsList.get(spotnr-1).getState().getColor()) {
-            case "orange" -> button.getStyleClass().add("state-orange");
-            case "red" -> button.getStyleClass().add("state-red");
-            default -> button.getStyleClass().add("state-green");
-        }
+        setButtonStyle(spot, button);
         button.setOnMouseClicked( e -> {
             // Clears infoblock
             pane.getChildren().clear();
@@ -81,10 +79,24 @@ public class UserInterface extends Application {
         return button;
     }
 
+    private void setButtonStyle(Spot spot, Button button){
+        if (spot.getClass().isAssignableFrom(BringableSpot.class)) {
+
+        }
+
+        // Gets color from state and gets right style for button:
+        switch (spot.getState().getColor()) {
+            case "orange" -> button.getStyleClass().add("state-orange");
+            case "red" -> button.getStyleClass().add("state-red");
+            default -> button.getStyleClass().add("state-green");
+        }
+    }
+
     private void addSpots(){
-//        TODO: JSON File hierop toepassen. Nu nog hardcoded.
+//        TODO: JSON File hierop toepassen. Nu is het nog hardcoded.
         for (int i = 0; i < 60; i++){
             switch (i+1) {
+//                TODO: Nu nog standaard een bringable spot, kan uiteraard ook een buildingspot zijn. Moet ook uit de JSON komen.
                 case 2 -> spotsList.add(new BringableSpot(new UnderMaintenance()));
                 case 12 -> spotsList.add(new BringableSpot(new Reserved()));
                 default -> spotsList.add(new BringableSpot(new Free()));
