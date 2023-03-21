@@ -14,14 +14,14 @@
     -fx-font-size: 24;
 }
 
-.state-free { -fx-background-color: rgba(85, 255, 0, 0.2); }
-.state-free:hover { -fx-background-color: rgba(82, 255, 0, 0.4); }
-.state-free:pressed { -fx-background-color: rgba(82, 255, 0, 0.6); }
+.state-green { -fx-background-color: rgba(85, 255, 0, 0.2); }
+.state-green:hover { -fx-background-color: rgba(82, 255, 0, 0.4); }
+.state-green:pressed { -fx-background-color: rgba(82, 255, 0, 0.6); }
 
-.state-reserved { -fx-background-color: rgba(255, 0, 0, 0.2); }
-.state-reserved:hover { -fx-background-color: rgba(255, 0, 0, 0.4); }
-.state-reserved:pressed { -fx-background-color: rgba(255, 0, 0, 0.6); }
+.state-red { -fx-background-color: rgba(255, 0, 0, 0.2); }
+.state-red:hover { -fx-background-color: rgba(255, 0, 0, 0.4); }
+.state-red:pressed { -fx-background-color: rgba(255, 0, 0, 0.6); }
 
-.state-maintenance { -fx-background-color: rgba(255, 166, 0, 0.2); }
-.state-maintenance:hover { -fx-background-color: rgba(255, 166, 0, 0.4); }
-.state-maintenance:pressed { -fx-background-color: rgba(255, 166, 0, 0.6); }
+.state-orange { -fx-background-color: rgba(255, 166, 0, 0.2); }
+.state-orange:hover { -fx-background-color: rgba(255, 166, 0, 0.4); }
+.state-orange:pressed { -fx-background-color: rgba(255, 166, 0, 0.6); }
