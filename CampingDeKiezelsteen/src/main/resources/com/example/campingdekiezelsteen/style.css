@@ -1,6 +1,10 @@
 
 .bluePrint {
     -fx-background-color: #e8ffdd;
+    -fx-background-image: url("bg.png");
+    -fx-background-repeat: stretch;
+    -fx-background-size: 700 600;
+    -fx-background-position: center center;
 }
 
 .infoBlock {

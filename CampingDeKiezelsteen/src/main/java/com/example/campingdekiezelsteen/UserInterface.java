@@ -4,24 +4,16 @@ import com.example.campingdekiezelsteen.State.Free;
 import com.example.campingdekiezelsteen.State.Reserved;
 import com.example.campingdekiezelsteen.State.UnderMaintenance;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Control;
-import javafx.scene.control.Label;
-import javafx.scene.control.Tooltip;
-import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
-public class HelloApplication extends Application {
+public class UserInterface extends Application {
     ArrayList<Spot> spotsList = new ArrayList<>();
     private final Pane pane = new Pane();
 
@@ -31,7 +23,7 @@ public class HelloApplication extends Application {
         addSpots();
         // Sets up scene.
         Scene scene = new Scene(setupDesign(), 1000, 600);
-        scene.getStylesheets().add(HelloApplication.class.getResource("style.css").toExternalForm());
+        scene.getStylesheets().add(UserInterface.class.getResource("style.css").toExternalForm());
         stage.setScene(scene);
         stage.show();
     }
@@ -50,8 +42,8 @@ public class HelloApplication extends Application {
         gridPane.getStyleClass().add("bluePrint");
         gridPane.setPrefWidth(700);
         gridPane.setAlignment(Pos.CENTER);
-        gridPane.setHgap(10);
-        gridPane.setVgap(10);
+        gridPane.setHgap(15);
+        gridPane.setVgap(15);
         gridPane.setPadding(new Insets(20, 20, 20, 20));
         // Gets square root of amount of spots to divide in even rows and columns.
         double square = Math.sqrt(spotsList.size());
