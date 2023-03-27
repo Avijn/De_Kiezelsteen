@@ -3,9 +3,7 @@ package com.example.campingdekiezelsteen;
 public abstract class Building extends Placeable {
     private String name;
 
-    public void clean(){
-
-    }
+    public void clean(){    }
 
     public void cleanWindows(){
 
@@ -25,5 +23,15 @@ public abstract class Building extends Placeable {
 
     public void cleanFloors(){
 
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public void setName(String name) {
+        this.name = name;
     }
 }

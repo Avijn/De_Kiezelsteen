@@ -66,7 +66,6 @@ public class UserInterface extends Application {
 
     private Button addButton(int spotnr) {
         Spot spot = spotsList.get(spotnr - 1);
-        System.out.println(spot.getClass().isAssignableFrom(BringableSpot.class));
         Button button = new Button(String.valueOf(spotnr));
         button.setPrefSize(200, 200);
         setButtonStyle(spot, button);
@@ -74,16 +73,12 @@ public class UserInterface extends Application {
             // Clears infoblock
             pane.getChildren().clear();
             // Adds right info in infoblock
-            pane.getChildren().add(spotsList.get(spotnr - 1).getState().buttonClicked());
+            pane.getChildren().add(spotsList.get(spotnr - 1).getState().buttonClicked(spot));
         });
         return button;
     }
 
     private void setButtonStyle(Spot spot, Button button) {
-//        if (spot.getClass().isAssignableFrom(BringableSpot.class)) {
-//            button.getStyleClass().add("tikitent");
-//        }
-
         if (spot.getPlaceable() != null && spot.getPlaceable().getStyle() != "") {
             button.getStyleClass().add(spot.getPlaceable().getStyle());
         }
@@ -109,11 +104,27 @@ public class UserInterface extends Application {
         for (int i = 0; i < 60; i++) {
             switch (i + 1) {
 //                TODO: Nu nog standaard een bringable spot, kan uiteraard ook een buildingspot zijn. Moet ook uit de JSON komen.
-                case 2 -> spotsList.add(buildingSpot);
-                case 12 -> spotsList.add(sanitair);
-                case 15 -> spotsList.add(laundry);
-                case 35 -> spotsList.add(tiki);
-                default -> spotsList.add(new BringableSpot(new Free()));
+                case 2 -> {
+                    buildingSpot.setSpotNr(i + 1);
+                    spotsList.add(buildingSpot);
+                }
+                case 12 -> {
+                    sanitair.setSpotNr(i + 1);
+                    spotsList.add(sanitair);
+                }
+                case 15 -> {
+                    laundry.setSpotNr(i + 1);
+                    spotsList.add(laundry);
+                }
+                case 35 -> {
+                    tiki.setSpotNr(i + 1);
+                    spotsList.add(tiki);
+                }
+                default -> {
+                    Spot spot = new BringableSpot(new Free());
+                    spot.setSpotNr(i + 1);
+                    spotsList.add(spot);
+                }
             }
         }
     }

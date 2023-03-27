@@ -3,6 +3,10 @@ package com.example.campingdekiezelsteen;
 public class House extends Building implements Reservable {
     private String style = "house";
 
+    public House(){
+        setName("Vakantiehuis");
+    }
+
     @Override
     public void cleanWindows() {
         super.cleanWindows();

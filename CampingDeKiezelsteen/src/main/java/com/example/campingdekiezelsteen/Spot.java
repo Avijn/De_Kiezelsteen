@@ -6,6 +6,7 @@ import com.example.campingdekiezelsteen.State.State;
 public abstract class Spot {
     private State state;
     private Placeable placeable;
+    private int spotNr;
 
     public void changeState(State state){
         this.state = state;
@@ -33,5 +34,13 @@ public abstract class Spot {
 
     public void setPlaceable(Placeable placeable) {
         this.placeable = placeable;
+    }
+
+    public int getSpotNr() {
+        return spotNr;
+    }
+
+    public void setSpotNr(int spotNr) {
+        this.spotNr = spotNr;
     }
 }

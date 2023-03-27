@@ -4,6 +4,10 @@ package com.example.campingdekiezelsteen;
 public class TikiTent extends Building implements Reservable {
     private String style = "tikitent";
 
+    public TikiTent(){
+        setName("Tiki-tent");
+    }
+
     @Override
     public void cleanSheets() {
         super.cleanSheets();
