@@ -1,6 +1,7 @@
 package com.example.campingdekiezelsteen;
 
-public class House extends Building {
+public class House extends Building implements Reservable {
+    private String style = "house";
 
     @Override
     public void cleanWindows() {
@@ -10,5 +11,19 @@ public class House extends Building {
     @Override
     public void cleanSheets() {
         super.cleanSheets();
+    }
+
+    @Override
+    public void reserve() {
+
+    }
+
+
+    public String getStyle() {
+        return style;
+    }
+
+    public void setStyle(String style) {
+        this.style = style;
     }
 }

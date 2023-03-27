@@ -65,12 +65,12 @@ public class UserInterface extends Application {
     }
 
     private Button addButton(int spotnr) {
-        Spot spot = spotsList.get(spotnr-1);
+        Spot spot = spotsList.get(spotnr - 1);
         System.out.println(spot.getClass().isAssignableFrom(BringableSpot.class));
         Button button = new Button(String.valueOf(spotnr));
         button.setPrefSize(200, 200);
         setButtonStyle(spot, button);
-        button.setOnMouseClicked( e -> {
+        button.setOnMouseClicked(e -> {
             // Clears infoblock
             pane.getChildren().clear();
             // Adds right info in infoblock
@@ -79,9 +79,13 @@ public class UserInterface extends Application {
         return button;
     }
 
-    private void setButtonStyle(Spot spot, Button button){
-        if (spot.getClass().isAssignableFrom(BringableSpot.class)) {
+    private void setButtonStyle(Spot spot, Button button) {
+//        if (spot.getClass().isAssignableFrom(BringableSpot.class)) {
+//            button.getStyleClass().add("tikitent");
+//        }
 
+        if (spot.getPlaceable() != null && spot.getPlaceable().getStyle() != "") {
+            button.getStyleClass().add(spot.getPlaceable().getStyle());
         }
 
         // Gets color from state and gets right style for button:
@@ -92,13 +96,23 @@ public class UserInterface extends Application {
         }
     }
 
-    private void addSpots(){
+    private void addSpots() {
 //        TODO: JSON File hierop toepassen. Nu is het nog hardcoded.
-        for (int i = 0; i < 60; i++){
-            switch (i+1) {
+        BuildingSpot buildingSpot = new BuildingSpot(new Free());
+        buildingSpot.createPlaceable(new House());
+        BuildingSpot sanitair = new BuildingSpot(new Reserved());
+        sanitair.createPlaceable(new Sanitair());
+        BuildingSpot laundry = new BuildingSpot(new Reserved());
+        laundry.createPlaceable(new Laundry());
+        BuildingSpot tiki = new BuildingSpot(new UnderMaintenance());
+        tiki.createPlaceable(new TikiTent());
+        for (int i = 0; i < 60; i++) {
+            switch (i + 1) {
 //                TODO: Nu nog standaard een bringable spot, kan uiteraard ook een buildingspot zijn. Moet ook uit de JSON komen.
-                case 2 -> spotsList.add(new BringableSpot(new UnderMaintenance()));
-                case 12 -> spotsList.add(new BringableSpot(new Reserved()));
+                case 2 -> spotsList.add(buildingSpot);
+                case 12 -> spotsList.add(sanitair);
+                case 15 -> spotsList.add(laundry);
+                case 35 -> spotsList.add(tiki);
                 default -> spotsList.add(new BringableSpot(new Free()));
             }
         }
