@@ -4,24 +4,16 @@ import com.example.campingdekiezelsteen.State.Free;
 import com.example.campingdekiezelsteen.State.Reserved;
 import com.example.campingdekiezelsteen.State.UnderMaintenance;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Control;
-import javafx.scene.control.Label;
-import javafx.scene.control.Tooltip;
-import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
-public class HelloApplication extends Application {
+public class UserInterface extends Application {
     ArrayList<Spot> spotsList = new ArrayList<>();
     private final Pane pane = new Pane();
 
@@ -31,7 +23,7 @@ public class HelloApplication extends Application {
         addSpots();
         // Sets up scene.
         Scene scene = new Scene(setupDesign(), 1000, 600);
-        scene.getStylesheets().add(HelloApplication.class.getResource("style.css").toExternalForm());
+        scene.getStylesheets().add(UserInterface.class.getResource("style.css").toExternalForm());
         stage.setScene(scene);
         stage.show();
     }
@@ -49,9 +41,10 @@ public class HelloApplication extends Application {
         GridPane gridPane = new GridPane();
         gridPane.getStyleClass().add("bluePrint");
         gridPane.setPrefWidth(700);
+        gridPane.setMaxHeight(600);
         gridPane.setAlignment(Pos.CENTER);
-        gridPane.setHgap(10);
-        gridPane.setVgap(10);
+        gridPane.setHgap(15);
+        gridPane.setVgap(15);
         gridPane.setPadding(new Insets(20, 20, 20, 20));
         // Gets square root of amount of spots to divide in even rows and columns.
         double square = Math.sqrt(spotsList.size());
@@ -72,14 +65,11 @@ public class HelloApplication extends Application {
     }
 
     private Button addButton(int spotnr) {
+        Spot spot = spotsList.get(spotnr-1);
+        System.out.println(spot.getClass().isAssignableFrom(BringableSpot.class));
         Button button = new Button(String.valueOf(spotnr));
         button.setPrefSize(200, 200);
-        // Gets color from state and gets right style for button:
-        switch (spotsList.get(spotnr-1).getState().getColor()) {
-            case "orange" -> button.getStyleClass().add("state-orange");
-            case "red" -> button.getStyleClass().add("state-red");
-            default -> button.getStyleClass().add("state-green");
-        }
+        setButtonStyle(spot, button);
         button.setOnMouseClicked( e -> {
             // Clears infoblock
             pane.getChildren().clear();
@@ -89,10 +79,24 @@ public class HelloApplication extends Application {
         return button;
     }
 
+    private void setButtonStyle(Spot spot, Button button){
+        if (spot.getClass().isAssignableFrom(BringableSpot.class)) {
+
+        }
+
+        // Gets color from state and gets right style for button:
+        switch (spot.getState().getColor()) {
+            case "orange" -> button.getStyleClass().add("state-orange");
+            case "red" -> button.getStyleClass().add("state-red");
+            default -> button.getStyleClass().add("state-green");
+        }
+    }
+
     private void addSpots(){
-//        TODO: JSON File hierop toepassen. Nu nog hardcoded.
+//        TODO: JSON File hierop toepassen. Nu is het nog hardcoded.
         for (int i = 0; i < 60; i++){
             switch (i+1) {
+//                TODO: Nu nog standaard een bringable spot, kan uiteraard ook een buildingspot zijn. Moet ook uit de JSON komen.
                 case 2 -> spotsList.add(new BringableSpot(new UnderMaintenance()));
                 case 12 -> spotsList.add(new BringableSpot(new Reserved()));
                 default -> spotsList.add(new BringableSpot(new Free()));

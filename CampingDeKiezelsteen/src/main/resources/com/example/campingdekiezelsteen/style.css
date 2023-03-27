@@ -1,6 +1,10 @@
 
 .bluePrint {
     -fx-background-color: #e8ffdd;
+    -fx-background-image: url("bg.png");
+    -fx-background-repeat: stretch;
+    -fx-background-size: 700 600;
+    -fx-background-position: center center;
 }
 
 .infoBlock {
@@ -25,3 +29,32 @@
 .state-orange { -fx-background-color: rgba(255, 166, 0, 0.2); }
 .state-orange:hover { -fx-background-color: rgba(255, 166, 0, 0.4); }
 .state-orange:pressed { -fx-background-color: rgba(255, 166, 0, 0.6); }
+
+.tikitent {
+    -fx-background-image: url("tikitent.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 60 60;
+    -fx-background-position: center center;
+}
+
+.house {
+    -fx-background-image: url("house.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 60 60;
+    -fx-background-position: center center;
+}
+
+.sanitair {
+    -fx-background-image: url("sanitair.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 60 60;
+    -fx-background-position: center center;
+}
+
+.laundry {
+    -fx-background-image: url("laundry.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 60 60;
+    -fx-background-position: center center;
+}
+
