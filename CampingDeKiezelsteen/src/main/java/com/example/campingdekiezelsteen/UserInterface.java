@@ -2,20 +2,29 @@ package com.example.campingdekiezelsteen;
 
 import com.example.campingdekiezelsteen.State.Free;
 import com.example.campingdekiezelsteen.State.Reserved;
+import com.example.campingdekiezelsteen.State.State;
 import com.example.campingdekiezelsteen.State.UnderMaintenance;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.layout.*;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
 
 public class UserInterface extends Application {
-    ArrayList<Spot> spotsList = new ArrayList<>();
     private final Pane pane = new Pane();
+    private final GridPane gridPane = new GridPane();
+    private ArrayList<Spot> spotsList = new ArrayList<>();
+
+    public static void main(String[] args) {
+        launch();
+    }
 
     @Override
     public void start(Stage stage) {
@@ -38,7 +47,6 @@ public class UserInterface extends Application {
     }
 
     private GridPane setupGrid() {
-        GridPane gridPane = new GridPane();
         gridPane.getStyleClass().add("bluePrint");
         gridPane.setPrefWidth(700);
         gridPane.setMaxHeight(600);
@@ -69,17 +77,46 @@ public class UserInterface extends Application {
         Button button = new Button(String.valueOf(spotnr));
         button.setPrefSize(200, 200);
         setButtonStyle(spot, button);
+        // Shows infoblock when button is clicked
         button.setOnMouseClicked(e -> {
-            // Clears infoblock
-            pane.getChildren().clear();
-            // Adds right info in infoblock
-            pane.getChildren().add(spotsList.get(spotnr - 1).getState().buttonClicked(spot));
+            loadPane(getPaneInfo(spot, button));
         });
         return button;
     }
 
+    private VBox getPaneInfo(Spot spot, Button button){
+        // Creates info block
+        VBox vBox = spot.getState().buttonClicked(spot);
+        // Sets listener for button inside info block
+        vBox.getChildren().get(vBox.getChildren().size() - 1).setOnMouseClicked(event -> {
+//            TODO: Is nu alleen nog voor het onderhoud: Button wanneer hij vrij is doet nu nog niks.
+            State newState = new Free();
+            if (spot.getPlaceable() != null && (spot.getPlaceable().getClass().isAssignableFrom(Laundry.class) || spot.getPlaceable().getClass().isAssignableFrom(Sanitair.class))) {
+                newState = new Reserved();
+            }
+            // Changes state
+            spot.changeState(newState);
+            // Reloads button and info block
+            setButtonStyle(spot, button);
+            loadPane(spot.getState().buttonClicked(spot));
+        });
+        return vBox;
+    }
+
+    private void loadPane(VBox vBox){
+        // Clears infoblock
+        pane.getChildren().clear();
+        // Adds right info in infoblock
+        pane.getChildren().add(vBox);
+    }
+
     private void setButtonStyle(Spot spot, Button button) {
+        // Clears all styles
+        button.getStyleClass().clear();
+        // Adds standard style to all buttons
+        button.getStyleClass().add("transparent");
         if (spot.getPlaceable() != null && spot.getPlaceable().getStyle() != "") {
+            // Adds background style -> png image of placeable
             button.getStyleClass().add(spot.getPlaceable().getStyle());
         }
 
@@ -93,9 +130,9 @@ public class UserInterface extends Application {
 
     private void addSpots() {
 //        TODO: JSON File hierop toepassen. Nu is het nog hardcoded.
-        BuildingSpot buildingSpot = new BuildingSpot(new Free());
+        BuildingSpot buildingSpot = new BuildingSpot(new UnderMaintenance());
         buildingSpot.createPlaceable(new House());
-        BuildingSpot sanitair = new BuildingSpot(new Reserved());
+        BuildingSpot sanitair = new BuildingSpot(new UnderMaintenance());
         sanitair.createPlaceable(new Sanitair());
         BuildingSpot laundry = new BuildingSpot(new Reserved());
         laundry.createPlaceable(new Laundry());
@@ -127,9 +164,5 @@ public class UserInterface extends Application {
                 }
             }
         }
-    }
-
-    public static void main(String[] args) {
-        launch();
     }
 }

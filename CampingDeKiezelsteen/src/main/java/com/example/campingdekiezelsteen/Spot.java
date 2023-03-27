@@ -1,6 +1,5 @@
 package com.example.campingdekiezelsteen;
 
-import com.example.campingdekiezelsteen.State.Free;
 import com.example.campingdekiezelsteen.State.State;
 
 public abstract class Spot {
@@ -10,6 +9,7 @@ public abstract class Spot {
 
     public void changeState(State state){
         this.state = state;
+//        TODO: Iets van een callback zodat de user interface aangepast wordt
     }
 
     public void createPlaceable(Placeable placeable){

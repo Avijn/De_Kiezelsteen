@@ -1,5 +1,7 @@
 package com.example.campingdekiezelsteen;
 
+import java.util.ArrayList;
+
 public class House extends Building implements Reservable {
     private String style = "house";
 
@@ -22,6 +24,13 @@ public class House extends Building implements Reservable {
 
     }
 
+    @Override
+    public ArrayList<String> getChecklist() {
+        ArrayList<String> checklistitems = new ArrayList<>();
+        checklistitems.add("Ramen lappen");
+        checklistitems.add("Bedden opmaken");
+        return checklistitems;
+    }
 
     public String getStyle() {
         return style;

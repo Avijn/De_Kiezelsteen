@@ -10,6 +10,10 @@ public class BringableSpot extends Spot implements Reservable {
         this.state = state;
     }
 
+    @Override
+    public void changeState(State state) {
+        this.state = state;
+    }
 
     @Override
     public State getState() {

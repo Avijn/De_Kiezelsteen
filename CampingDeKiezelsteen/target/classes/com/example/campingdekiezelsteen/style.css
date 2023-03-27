@@ -17,6 +17,11 @@
     -fx-font-size: 24;
 }
 
+.transparent {
+    -fx-background-radius: 4;
+    -fx-alignment: center;
+}
+
 .state-green {
     -fx-background-color: rgba(85, 255, 0, 0.2);
 }
@@ -81,6 +86,27 @@
     -fx-background-position: center center;
 }
 
+.tent {
+    -fx-background-image: url("tent.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 60 60;
+    -fx-background-position: center center;
+}
+
+.caravan {
+    -fx-background-image: url("caravan.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 60 60;
+    -fx-background-position: center center;
+}
+
+.camper{
+    -fx-background-image: url("camper.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 60 60;
+    -fx-background-position: center center;
+}
+
 .text-label {
     -fx-font-family: fantasy;
     -fx-font-size: 16;
@@ -93,6 +119,20 @@
     -fx-font-size: 12;
     -fx-padding: 5 0;
     -fx-font-weight: 300;
+}
+
+.info-text .box {
+    -fx-background-color: white;
+    -fx-border-color:grey;
+    -fx-border-radius: 3;
+}
+
+.info-text:selected .mark {
+    -fx-background-color: white;
+}
+
+.info-text:selected .box {
+    -fx-background-color: #3d7333;
 }
 
 .text-field-label {

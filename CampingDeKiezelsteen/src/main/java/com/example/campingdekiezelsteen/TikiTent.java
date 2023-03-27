@@ -1,6 +1,8 @@
 package com.example.campingdekiezelsteen;
 
 
+import java.util.ArrayList;
+
 public class TikiTent extends Building implements Reservable {
     private String style = "tikitent";
 
@@ -16,6 +18,13 @@ public class TikiTent extends Building implements Reservable {
     @Override
     public void reserve() {
 
+    }
+
+    @Override
+    public ArrayList<String> getChecklist() {
+        ArrayList<String> checklistitems = new ArrayList<>();
+        checklistitems.add("Bedden opmaken");
+        return checklistitems;
     }
 
     public String getStyle() {

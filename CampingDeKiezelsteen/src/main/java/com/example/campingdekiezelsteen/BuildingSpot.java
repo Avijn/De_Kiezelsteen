@@ -10,6 +10,11 @@ public class BuildingSpot extends Spot {
     }
 
     @Override
+    public void changeState(State state) {
+        this.state = state;
+    }
+
+    @Override
     public State getState() {
         return state;
     }
