@@ -9,6 +9,7 @@ import com.google.gson.*;
 
 public class Blueprint {
     private String background;
+    //Todo This is used for testing purposes since Spot is not done yet, needs to be removed!
     //private Map<Integer, Spot> spots;
     private Map<Integer, Camping> spots;
     private File file;
