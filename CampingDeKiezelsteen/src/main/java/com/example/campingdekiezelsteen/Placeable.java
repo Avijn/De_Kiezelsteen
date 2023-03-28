@@ -4,6 +4,10 @@ public abstract class Placeable {
     private String name;
     private String style;
 
+    public Placeable(String name) {
+        this.name = name;
+    }
+
     public String getName() {
         return name;
     }

@@ -1,4 +1,7 @@
 package com.example.campingdekiezelsteen;
 
-public class Caravan {
+public class Caravan extends Bringable {
+    public Caravan() {
+        super("Caravan");
+    }
 }

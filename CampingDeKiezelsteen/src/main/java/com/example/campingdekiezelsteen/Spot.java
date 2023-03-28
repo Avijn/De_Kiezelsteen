@@ -16,6 +16,7 @@ public abstract class Spot {
         this.placeable = placeable;
     }
 
+    public abstract Placeable createPlaceable2(String placeableType);
 
 
 // Getters en setters
