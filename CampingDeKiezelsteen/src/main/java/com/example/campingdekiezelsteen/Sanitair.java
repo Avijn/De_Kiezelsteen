@@ -5,8 +5,8 @@ import java.util.ArrayList;
 public class Sanitair extends Building {
     private String style = "sanitair";
 
-    public Sanitair(){
-        setName("Sanitair");
+    public Sanitair(String name){
+        setName(name);
     }
 
     @Override

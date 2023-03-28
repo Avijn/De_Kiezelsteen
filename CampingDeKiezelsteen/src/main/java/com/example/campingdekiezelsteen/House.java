@@ -5,8 +5,8 @@ import java.util.ArrayList;
 public class House extends Building implements Reservable {
     private String style = "house";
 
-    public House(){
-        setName("Vakantiehuis");
+    public House(String name){
+        setName(name);
     }
 
     @Override
