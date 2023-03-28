@@ -6,6 +6,8 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+import java.time.format.DateTimeFormatter;
+
 public class Reserved implements State {
     private String color = "red";
     private Reservation reservation;
@@ -36,10 +38,11 @@ public class Reserved implements State {
 
         if (reservation != null) {
             vBox.getChildren().add(getName());
-                vBox.getChildren().add(getDate(String.valueOf(reservation.getArrivaldate()), true));
-                vBox.getChildren().add(getDate(String.valueOf(reservation.getDeparturedate())
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy");
+                vBox.getChildren().add(getDate(reservation.getArrivaldate().format(formatter), true));
+                vBox.getChildren().add(getDate(reservation.getDeparturedate().format(formatter)
                         , false));
-        } else {
+        } else if(state != "Niet te reserveren"){
             Label error = new Label("Er is iets misgegaan.");
             error.getStyleClass().add("info-text");
             vBox.getChildren().add(error);
@@ -51,15 +54,17 @@ public class Reserved implements State {
         HBox hBox = new HBox();
         hBox.setPadding(new Insets(20, 0, 0, 0));
         Label title = new Label("Hoofdboeker: ");
+        title.setPrefWidth(130);
         title.getStyleClass().add("info-text");
         String name = "-";
         if (reservation != null) {
             name = reservation.getCustomerName();
         }
-        Label date = new Label(name);
-        date.getStyleClass().add("info-text");
+        Label nameLabel = new Label(name);
+        nameLabel.setPrefWidth(130);
+        nameLabel.getStyleClass().add("info-text");
         hBox.getChildren().add(title);
-        hBox.getChildren().add(date);
+        hBox.getChildren().add(nameLabel);
         return hBox;
     }
 
@@ -71,8 +76,10 @@ public class Reserved implements State {
             titleString = "Vertrekdatum: ";
         }
         Label title = new Label(titleString);
+        title.setPrefWidth(130);
         title.getStyleClass().add("info-text");
         Label date = new Label(dateString);
+        date.setPrefWidth(130);
         date.getStyleClass().add("info-text");
         hBox.getChildren().add(title);
         hBox.getChildren().add(date);

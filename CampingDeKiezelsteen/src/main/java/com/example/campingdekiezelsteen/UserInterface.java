@@ -24,7 +24,12 @@ import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class UserInterface extends Application {
     private final Pane pane = new Pane();
@@ -44,6 +49,16 @@ public class UserInterface extends Application {
         // Sets up scene.
         Scene scene = new Scene(setupDesign(), 1000, 600);
         scene.getStylesheets().add(UserInterface.class.getResource("style.css").toExternalForm());
+
+//        CREATED FOR DAILY REFRESH, BUT NOT NECESSARY RIGHT NOW.
+//        LocalTime minutes = LocalTime.MIDNIGHT.minusSeconds(LocalTime.now().toSecondOfDay());
+//        Timer timer = new Timer();
+//        timer.schedule(new TimerTask(){
+//            public void run(){
+//                System.out.println("Im Running..."+minutes.toSecondOfDay() * 60 * 60 * 24);
+//            }
+//        }, new Date(), minutes.toSecondOfDay() * 60 * 60 * 24);
+
         stage.setScene(scene);
         // Disable resizable property.
         stage.resizableProperty().setValue(Boolean.FALSE);
