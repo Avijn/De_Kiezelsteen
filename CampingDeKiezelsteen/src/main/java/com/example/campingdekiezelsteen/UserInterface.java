@@ -1,5 +1,6 @@
 package com.example.campingdekiezelsteen;
 
+import com.example.campingdekiezelsteen.Adapter.Camping;
 import com.example.campingdekiezelsteen.State.Free;
 import com.example.campingdekiezelsteen.State.Reserved;
 import com.example.campingdekiezelsteen.State.State;
@@ -18,6 +19,7 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 
 public class UserInterface extends Application {
+    private Camping camping;
     private final Pane pane = new Pane();
     private final GridPane gridPane = new GridPane();
     private ArrayList<Spot> spotsList = new ArrayList<>();
@@ -29,6 +31,7 @@ public class UserInterface extends Application {
     @Override
     public void start(Stage stage) {
         // Adds spots to spotsList.
+        camping = new Camping("De Kiezelsteen");
         addSpots();
         // Sets up scene.
         Scene scene = new Scene(setupDesign(), 1000, 600);
@@ -47,7 +50,8 @@ public class UserInterface extends Application {
     }
 
     private GridPane setupGrid() {
-        gridPane.getStyleClass().add("bluePrint");
+        // Gets background css class from blueprint.
+        gridPane.getStyleClass().add(camping.getBlueprint().getBackground());
         gridPane.setPrefWidth(700);
         gridPane.setMaxHeight(600);
         gridPane.setAlignment(Pos.CENTER);
