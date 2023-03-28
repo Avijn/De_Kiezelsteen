@@ -89,16 +89,23 @@ public class UserInterface extends Application {
         VBox vBox = spot.getState().buttonClicked(spot);
         // Sets listener for button inside info block
         vBox.getChildren().get(vBox.getChildren().size() - 1).setOnMouseClicked(event -> {
-//            TODO: Is nu alleen nog voor het onderhoud: Button wanneer hij vrij is doet nu nog niks.
-            State newState = new Free();
-            if (spot.getPlaceable() != null && (spot.getPlaceable().getClass().isAssignableFrom(Laundry.class) || spot.getPlaceable().getClass().isAssignableFrom(Sanitair.class))) {
-                newState = new Reserved();
+            // If state is under maintenance, then make button change state.
+            if (spot.getState().getClass().isAssignableFrom(UnderMaintenance.class)) {
+                State newState = new Free();
+                if (spot.getPlaceable() != null && (spot.getPlaceable().getClass().isAssignableFrom(Laundry.class) || spot.getPlaceable().getClass().isAssignableFrom(Sanitair.class))) {
+                    newState = new Reserved();
+                }
+                // Changes state
+                spot.changeState(newState);
+                // Reloads button and info block
+                setButtonStyle(spot, button);
+                loadPane(spot.getState().buttonClicked(spot));
             }
-            // Changes state
-            spot.changeState(newState);
-            // Reloads button and info block
-            setButtonStyle(spot, button);
-            loadPane(spot.getState().buttonClicked(spot));
+            // Else if state is free make reservation.
+            else if (spot.getState().getClass().isAssignableFrom(Free.class)) {
+                // TODO: make reservation.
+                
+            }
         });
         return vBox;
     }

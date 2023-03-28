@@ -27,11 +27,15 @@ public class UnderMaintenance implements State {
                 for (String item : b.getChecklist()) {
                     CheckBox listitem = getChecklistItem(item);
                     listitem.setOnMouseClicked(e -> {
-                        boolean allChecked = false;
+                        // When item is clicked code below will check if all items of checklist have been checked.
+                        // When this is the case the submit button will be changed to active.
+                        ArrayList<CheckBox> checked = new ArrayList<>();
                         for (CheckBox box : list) {
-                            allChecked = box.isSelected();
+                            if (box.isSelected()){
+                                checked.add(box);
+                            }
                         }
-                        submit.setDisable(!allChecked);
+                        submit.setDisable(!(checked.size() == list.size()));
                     });
                     list.add(listitem);
                 }
