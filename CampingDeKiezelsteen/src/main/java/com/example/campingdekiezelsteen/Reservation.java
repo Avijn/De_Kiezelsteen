@@ -9,13 +9,15 @@ public class Reservation {
     private LocalDate arrivaldate;
     private LocalDate departuredate;
     private String id;
+    private Placeable placeable;
 
-    public Reservation(Reservable reservable, String customerName, LocalDate arrivaldate, LocalDate departuredate, String id) {
+    public Reservation(Reservable reservable, String customerName, LocalDate arrivaldate, LocalDate departuredate, String id, Placeable placeable) {
         this.reservable = reservable;
         this.customerName = customerName;
         this.arrivaldate = arrivaldate;
         this.departuredate = departuredate;
         this.id = id;
+        this.placeable = placeable;
     }
 
     //    GETTERS AND SETTERS:

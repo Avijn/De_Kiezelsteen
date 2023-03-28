@@ -1,22 +1,19 @@
 package com.example.campingdekiezelsteen.State;
 
+import com.example.campingdekiezelsteen.BringableSpot;
 import com.example.campingdekiezelsteen.BuildingSpot;
 import com.example.campingdekiezelsteen.Spot;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
-import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
 
-
 public class Free implements State {
     private String color = "green";
-    private ArrayList<Object> fields = new ArrayList<>();
-    private Button submit = new Button("Reserveer");
+    private final ArrayList<Object> fields = new ArrayList<>();
+    private final Button submit = new Button("Reserveer");
 
     @Override
     public VBox buttonClicked(Spot spot) {
@@ -51,6 +48,10 @@ public class Free implements State {
         vBox.getChildren().add(getTextfield("Volledige naam hoofdboeker", "name"));
         vBox.getChildren().add(getDatePicker("Aankomstdatum", "aDate"));
         vBox.getChildren().add(getDatePicker("Vertrekdatum", "dDate"));
+        if (spot.getClass().isAssignableFrom(BringableSpot.class)) {
+            // If spot is a bringable spot -> add choices for bringable.
+            vBox.getChildren().add(getChoiceBox("Wat neemt u mee?", "choices"));
+        }
         vBox.getChildren().add(submit);
         // Return container (VBox).
         return vBox;
@@ -79,6 +80,31 @@ public class Free implements State {
         textfield.getChildren().add(fieldTitle);
         textfield.getChildren().add(field);
         // Returns datepicker as VBox.
+        return textfield;
+    }
+
+    private VBox getChoiceBox(String label, String id) {
+        // Creates label and choicebox item.
+        Label fieldTitle = new Label(label + ": ");
+        fieldTitle.getStyleClass().add("text-field-label");
+        ChoiceBox<String> field = new ChoiceBox<>();
+        field.getStyleClass().add("text-field");
+        // Adds items to choicebox and sets standard value.
+        field.getItems().add("Camper");
+        field.getItems().add("Caravan");
+        field.getItems().add("Tent");
+        field.setValue("Camper");
+        // Sets field id.
+        field.setId(id);
+
+        // Adds field to fields arraylist.
+        fields.add(field);
+
+        // Creates container and adds all children.
+        VBox textfield = new VBox();
+        textfield.getChildren().add(fieldTitle);
+        textfield.getChildren().add(field);
+        // Returns textfield as VBox.
         return textfield;
     }
 
@@ -125,6 +151,9 @@ public class Free implements State {
                         // If datepicker is not empty, add to filled arraylist.
                         filled.add(picker);
                     }
+                } else {
+                    // Else field is choicebox: has standard value so is added to filled arraylist.
+                    filled.add(o);
                 }
             }
             // Change button disabled to false if all fields have been filled in. Else set button disabled to true.

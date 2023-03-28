@@ -1,9 +1,6 @@
 package com.example.campingdekiezelsteen.State;
 
-import com.example.campingdekiezelsteen.BuildingSpot;
-import com.example.campingdekiezelsteen.Laundry;
-import com.example.campingdekiezelsteen.Sanitair;
-import com.example.campingdekiezelsteen.Spot;
+import com.example.campingdekiezelsteen.*;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
@@ -11,7 +8,12 @@ import javafx.scene.layout.VBox;
 
 public class Reserved implements State {
     private String color = "red";
-    private Label title;
+    private Reservation reservation;
+
+    public VBox buttonClicked(Spot spot, Reservation reservation) {
+        this.reservation = reservation;
+        return buttonClicked(spot);
+    }
 
     @Override
     public VBox buttonClicked(Spot spot) {
@@ -31,21 +33,30 @@ public class Reserved implements State {
         subtitle.getStyleClass().add("text-label");
         vBox.getChildren().add(title);
         vBox.getChildren().add(subtitle);
-        // TODO: if aanpassen naar : als er een reservering is
-        if (spot.getPlaceable() == null || (!spot.getPlaceable().getClass().isAssignableFrom(Laundry.class) && !spot.getPlaceable().getClass().isAssignableFrom(Sanitair.class))) {
+
+        if (reservation != null) {
             vBox.getChildren().add(getName());
-            vBox.getChildren().add(getDate("23-03-2023", true));
-            vBox.getChildren().add(getDate("30-03-2023", false));
+                vBox.getChildren().add(getDate(String.valueOf(reservation.getArrivaldate()), true));
+                vBox.getChildren().add(getDate(String.valueOf(reservation.getDeparturedate())
+                        , false));
+        } else {
+            Label error = new Label("Er is iets misgegaan.");
+            error.getStyleClass().add("info-text");
+            vBox.getChildren().add(error);
         }
         return vBox;
     }
 
-    private HBox getName(){
+    private HBox getName() {
         HBox hBox = new HBox();
         hBox.setPadding(new Insets(20, 0, 0, 0));
         Label title = new Label("Hoofdboeker: ");
         title.getStyleClass().add("info-text");
-        Label date = new Label("Voornaam Achternaam");
+        String name = "-";
+        if (reservation != null) {
+            name = reservation.getCustomerName();
+        }
+        Label date = new Label(name);
         date.getStyleClass().add("info-text");
         hBox.getChildren().add(title);
         hBox.getChildren().add(date);
