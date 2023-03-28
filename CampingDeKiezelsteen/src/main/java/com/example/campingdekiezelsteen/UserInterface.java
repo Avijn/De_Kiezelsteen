@@ -104,7 +104,7 @@ public class UserInterface extends Application {
             // Else if state is free make reservation.
             else if (spot.getState().getClass().isAssignableFrom(Free.class)) {
                 // TODO: make reservation.
-                
+
             }
         });
         return vBox;
