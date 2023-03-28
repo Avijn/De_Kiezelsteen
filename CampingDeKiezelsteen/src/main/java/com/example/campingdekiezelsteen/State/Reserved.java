@@ -42,6 +42,9 @@ public class Reserved implements State {
                 vBox.getChildren().add(getDate(reservation.getArrivaldate().format(formatter), true));
                 vBox.getChildren().add(getDate(reservation.getDeparturedate().format(formatter)
                         , false));
+                if (spot.getClass().isAssignableFrom(BringableSpot.class)) {
+                    vBox.getChildren().add(getPlaceableType(spot.getPlaceable().getName()));
+                }
         } else if(state != "Niet te reserveren"){
             Label error = new Label("Er is iets misgegaan.");
             error.getStyleClass().add("info-text");
@@ -65,6 +68,21 @@ public class Reserved implements State {
         nameLabel.getStyleClass().add("info-text");
         hBox.getChildren().add(title);
         hBox.getChildren().add(nameLabel);
+        return hBox;
+    }
+
+    private HBox getPlaceableType(String placeabletype){
+        HBox hBox = new HBox();
+        hBox.setPadding(new Insets(5, 0, 0, 0));
+        String titleString = "Overnachtingstype: ";
+        Label title = new Label(titleString);
+        title.setPrefWidth(130);
+        title.getStyleClass().add("info-text");
+        Label date = new Label(placeabletype);
+        date.setPrefWidth(130);
+        date.getStyleClass().add("info-text");
+        hBox.getChildren().add(title);
+        hBox.getChildren().add(date);
         return hBox;
     }
 

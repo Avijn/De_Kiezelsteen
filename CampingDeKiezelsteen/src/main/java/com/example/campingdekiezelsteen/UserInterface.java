@@ -233,6 +233,9 @@ public class UserInterface extends Application {
                         case "Tent" -> placeable = new Tent();
                         default -> placeable = null;
                     }
+
+                    assert placeable != null;
+                    placeable.setName(box.getValue());
                 }
             }
         }
