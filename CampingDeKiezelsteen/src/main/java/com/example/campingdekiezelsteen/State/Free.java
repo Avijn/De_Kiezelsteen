@@ -48,20 +48,21 @@ public class Free implements State {
         vBox.getChildren().add(title);
         vBox.getChildren().add(subtitle);
         vBox.getChildren().add(text);
-        vBox.getChildren().add(getTextfield("Volledige naam hoofdboeker"));
-        vBox.getChildren().add(getDatePicker("Aankomstdatum"));
-        vBox.getChildren().add(getDatePicker("Vertrekdatum"));
+        vBox.getChildren().add(getTextfield("Volledige naam hoofdboeker", "name"));
+        vBox.getChildren().add(getDatePicker("Aankomstdatum", "aDate"));
+        vBox.getChildren().add(getDatePicker("Vertrekdatum", "dDate"));
         vBox.getChildren().add(submit);
         // Return container (VBox).
         return vBox;
     }
 
-    private VBox getDatePicker(String label) {
+    private VBox getDatePicker(String label, String id) {
         // Creates label and datepicker item.
         Label fieldTitle = new Label(label + ": ");
         fieldTitle.getStyleClass().add("text-field-label");
         DatePicker field = new DatePicker();
         field.getStyleClass().add("text-field");
+        field.setId(id);
 
         // Disables typing inside datepicker.
         field.getEditor().setDisable(true);
@@ -81,12 +82,13 @@ public class Free implements State {
         return textfield;
     }
 
-    private VBox getTextfield(String label) {
+    private VBox getTextfield(String label, String id) {
         // Creates label and textfield item.
         Label fieldTitle = new Label(label + ": ");
         fieldTitle.getStyleClass().add("text-field-label");
         TextField field = new TextField();
         field.getStyleClass().add("text-field");
+        field.setId(id);
 
         // Adds textfield to arraylist with all fields.
         fields.add(field);
@@ -138,5 +140,9 @@ public class Free implements State {
 
     public void setColor(String color) {
         this.color = color;
+    }
+
+    public ArrayList<Object> getFields() {
+        return fields;
     }
 }

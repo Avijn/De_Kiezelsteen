@@ -5,23 +5,34 @@ import com.example.campingdekiezelsteen.State.Free;
 import com.example.campingdekiezelsteen.State.Reserved;
 import com.example.campingdekiezelsteen.State.State;
 import com.example.campingdekiezelsteen.State.UnderMaintenance;
+import javafx.animation.FadeTransition;
+import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.util.Duration;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class UserInterface extends Application {
-    private Camping camping;
     private final Pane pane = new Pane();
     private final GridPane gridPane = new GridPane();
+    private Camping camping;
     private ArrayList<Spot> spotsList = new ArrayList<>();
 
     public static void main(String[] args) {
@@ -37,6 +48,8 @@ public class UserInterface extends Application {
         Scene scene = new Scene(setupDesign(), 1000, 600);
         scene.getStylesheets().add(UserInterface.class.getResource("style.css").toExternalForm());
         stage.setScene(scene);
+        // Disable resizable property.
+        stage.resizableProperty().setValue(Boolean.FALSE);
         stage.show();
     }
 
@@ -88,7 +101,7 @@ public class UserInterface extends Application {
         return button;
     }
 
-    private VBox getPaneInfo(Spot spot, Button button){
+    private VBox getPaneInfo(Spot spot, Button button) {
         // Creates info block
         VBox vBox = spot.getState().buttonClicked(spot);
         // Sets listener for button inside info block
@@ -101,20 +114,22 @@ public class UserInterface extends Application {
                 }
                 // Changes state
                 spot.changeState(newState);
+                showPopup("Status succesvol veranderd.", 3);
                 // Reloads button and info block
                 setButtonStyle(spot, button);
-                loadPane(spot.getState().buttonClicked(spot));
+                loadPane(getPaneInfo(spot, button));
             }
             // Else if state is free make reservation.
             else if (spot.getState().getClass().isAssignableFrom(Free.class)) {
                 // TODO: make reservation.
-
+                Free state = (Free) spot.getState();
+                createReservation(spot, state.getFields());
             }
         });
         return vBox;
     }
 
-    private void loadPane(VBox vBox){
+    private void loadPane(VBox vBox) {
         // Clears infoblock
         pane.getChildren().clear();
         // Adds right info in infoblock
@@ -175,5 +190,108 @@ public class UserInterface extends Application {
                 }
             }
         }
+    }
+
+    private void createReservation(Spot spot, ArrayList<Object> fields) {
+        String name = "";
+        LocalDate arrivalDate = LocalDate.now();
+        LocalDate departureDate = LocalDate.now();
+        Reservable reservable;
+
+        if (spot instanceof Reservable) {
+            reservable = (Reservable) spot;
+        } else if (spot.getPlaceable() != null && spot.getPlaceable() instanceof Reservable) {
+            reservable = (Reservable) spot.getPlaceable();
+        } else {
+            reservable = null;
+        }
+
+        for (Object item : fields) {
+            if (item.getClass().isAssignableFrom(TextField.class)) {
+                TextField field = (TextField) item;
+                if (field.getId().equals("name")) {
+                    name = field.getText();
+                }
+            } else if (item.getClass().isAssignableFrom(DatePicker.class)) {
+                DatePicker field = (DatePicker) item;
+                if (field.getId().equals("aDate")) {
+                    arrivalDate = field.getValue();
+                } else if (field.getId().equals("dDate")) {
+                    departureDate = field.getValue();
+                }
+            }
+        }
+
+        if (reservable != null) {
+            Reservation reservation = new Reservation(reservable, name, arrivalDate, departureDate, "#" + spot.getSpotNr() + camping.getOrderBook().getReservations().size());
+            camping.getOrderBook().addReservation(camping.getOrderBook().getReservations().size(), reservation);
+            showPopup("Reservering succesvol aangemaakt.", 3);
+        }
+
+    }
+
+    private void showPopup(String message, int seconds) {
+        // can use an Alert, Dialog, or PopupWindow as needed...
+        Stage popup = new Stage();
+        // configure UI for popup etc...
+        popup.initStyle(StageStyle.TRANSPARENT);
+        VBox popupLayout = new VBox();
+
+        Label popupMessage = new Label(message);
+        popupMessage.getStyleClass().add("popup-text");
+
+        popupLayout.getChildren().add(popupMessage);
+        popupLayout.getStyleClass().add("popup-success");
+
+        Scene scene = new Scene(popupLayout, 800, 50);
+        scene.getStylesheets().add(UserInterface.class.getResource("style.css").toExternalForm());
+        scene.setFill(Color.TRANSPARENT);
+
+
+        popup.setScene(scene);
+        popup.setX((Screen.getPrimary().getVisualBounds().getWidth() - 800) / 2);
+        popup.setY((Screen.getPrimary().getVisualBounds().getHeight() - 50) / 8);
+
+        // hide popup after 3 seconds:
+        PauseTransition delay = new PauseTransition(Duration.seconds(seconds));
+        delay.setOnFinished(e -> {
+            FadeTransition fadeout = fade(false, popupLayout);
+
+            //playing the transition
+            fadeout.play();
+            fadeout.setOnFinished(event -> popup.hide());
+        });
+
+        popup.setAlwaysOnTop(true);
+        popup.show();
+        FadeTransition fadein = fade(true, popupLayout);
+        fadein.play();
+        delay.play();
+    }
+
+    private FadeTransition fade(boolean fadein, Node node) {
+        FadeTransition fade = new FadeTransition();
+
+        if (fadein) {
+            //setting the duration for the Fade transition
+            fade.setDuration(Duration.seconds(0.2));
+            //setting the initial and the target opacity value for the transition
+            fade.setFromValue(0);
+            fade.setToValue(100);
+        } else {
+            //setting the duration for the Fade transition
+            fade.setDuration(Duration.seconds(1));
+            //setting the initial and the target opacity value for the transition
+            fade.setFromValue(100);
+            fade.setToValue(0);
+        }
+
+        //the transition will set to be auto reversed by setting this to true
+        fade.setAutoReverse(false);
+
+        //setting Circle as the node onto which the transition will be applied
+        fade.setNode(node);
+
+        return fade;
     }
 }

@@ -1,15 +1,21 @@
 package com.example.campingdekiezelsteen;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class Reservation {
     private Reservable reservable;
     private String customerName;
-    private Date arrivaldate;
-    private Date departuredate;
-    private int id;
+    private LocalDate arrivaldate;
+    private LocalDate departuredate;
+    private String id;
 
-    public Reservation() {
+    public Reservation(Reservable reservable, String customerName, LocalDate arrivaldate, LocalDate departuredate, String id) {
+        this.reservable = reservable;
+        this.customerName = customerName;
+        this.arrivaldate = arrivaldate;
+        this.departuredate = departuredate;
+        this.id = id;
     }
 
     //    GETTERS AND SETTERS:
@@ -30,27 +36,27 @@ public class Reservation {
         this.customerName = customerName;
     }
 
-    public Date getArrivaldate() {
+    public LocalDate getArrivaldate() {
         return arrivaldate;
     }
 
-    public void setArrivaldate(Date arrivaldate) {
+    public void setArrivaldate(LocalDate arrivaldate) {
         this.arrivaldate = arrivaldate;
     }
 
-    public Date getDeparturedate() {
+    public LocalDate getDeparturedate() {
         return departuredate;
     }
 
-    public void setDeparturedate(Date departuredate) {
+    public void setDeparturedate(LocalDate departuredate) {
         this.departuredate = departuredate;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 }

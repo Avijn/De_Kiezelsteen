@@ -107,6 +107,21 @@
     -fx-background-position: center center;
 }
 
+.popup-success {
+    -fx-background-color: #019801;
+    -fx-background-radius: 8;
+}
+
+.popup-text {
+    -fx-text-fill: white;
+    -fx-alignment: center;
+    -fx-min-width: 800;
+    -fx-min-height: 50;
+    -fx-font-family: fantasy;
+    -fx-font-size: 18;
+    -fx-font-weight: 500;
+}
+
 .text-label {
     -fx-font-family: fantasy;
     -fx-font-size: 16;
