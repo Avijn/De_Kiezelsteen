@@ -17,6 +17,7 @@ public class Free implements State {
 
     @Override
     public VBox buttonClicked(Spot spot) {
+        fields.clear();
         // Sets up infoblock.
         VBox vBox = new VBox();
         vBox.setPadding(new Insets(20));

@@ -112,6 +112,11 @@
     -fx-background-radius: 8;
 }
 
+.popup-error {
+    -fx-background-color: #b03030;
+    -fx-background-radius: 8;
+}
+
 .popup-text {
     -fx-text-fill: white;
     -fx-alignment: center;

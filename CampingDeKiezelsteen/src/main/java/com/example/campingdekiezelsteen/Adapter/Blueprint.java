@@ -9,16 +9,16 @@ import com.google.gson.*;
 
 public class Blueprint {
     private String background;
-    //private Map<Integer, Spot> spots;
-    private Map<Integer, Camping> spots;
+    private Map<Integer, Spot> spots;
+//    private Map<Integer, Camping> spots;
     private File file;
 
     public Blueprint(String background)
     {
         this.background = background;
         //Todo This is used for testing purposes since Spot is not done yet, needs to be removed!
-        this.spots = new HashMap<Integer, Camping>();
-        //this.spots = new HashMap<interger, Spot>()
+//        this.spots = new HashMap<Integer, Camping>();
+        this.spots = new HashMap<Integer, Spot>();
     }
 
     public String getBackground() {
@@ -30,13 +30,13 @@ public class Blueprint {
     }
 
     //Todo needs to be uncommented when Spot is done!
-//    public Map<Integer, Spot> getSpots() {
-//        return spots;
-//    }
-//
-//    public void setSpots(Map<Integer, Spot> spots) {
-//        this.spots = spots;
-//    }
+    public Map<Integer, Spot> getSpots() {
+        return spots;
+    }
+
+    public void setSpots(Map<Integer, Spot> spots) {
+        this.spots = spots;
+    }
 
     public File getFile()
     {
@@ -100,9 +100,9 @@ public class Blueprint {
         for (JsonElement element: jsonArray) {
             JsonObject elementObject = element.getAsJsonObject();
             //Todo implement object when Spot is done {new Spot()}
-            spots.put(counter,  new Camping(
-                    elementObject.get("name").toString()
-            ));
+//            spots.put(counter,  new Camping(
+//                    elementObject.get("name").toString()
+//            ));
             counter++;
         }
     }

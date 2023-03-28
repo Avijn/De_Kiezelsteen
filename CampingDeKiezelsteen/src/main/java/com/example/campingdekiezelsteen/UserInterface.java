@@ -24,12 +24,7 @@ import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 public class UserInterface extends Application {
     private final Pane pane = new Pane();
@@ -43,9 +38,10 @@ public class UserInterface extends Application {
 
     @Override
     public void start(Stage stage) {
-        // Adds spots to spotsList.
+        // Creates camping and gets spots from blueprint.
         camping = new Camping("De Kiezelsteen");
-        addSpots();
+        spotsList = new ArrayList<>(camping.getBlueprint().getSpots().values());
+
         // Sets up scene.
         Scene scene = new Scene(setupDesign(), 1000, 600);
         scene.getStylesheets().add(UserInterface.class.getResource("style.css").toExternalForm());
@@ -138,14 +134,13 @@ public class UserInterface extends Application {
                     }
                     // Changes state
                     spot.changeState(newState);
-                    showPopup("Status succesvol veranderd.", 3);
+                    showPopup("Status succesvol veranderd.", 3, true);
                     // Reloads button and info block
                     setButtonStyle(spot, button);
                     loadPane(getPaneInfo(spot, button));
                 }
                 // Else if state is free make reservation.
                 else if (spot.getState().getClass().isAssignableFrom(Free.class)) {
-                    // TODO: make reservation.
                     Free state = (Free) spot.getState();
                     createReservation(spot, state.getFields());
                     setButtonStyle(spot, button);
@@ -187,44 +182,6 @@ public class UserInterface extends Application {
             case "orange" -> button.getStyleClass().add("state-orange");
             case "red" -> button.getStyleClass().add("state-red");
             default -> button.getStyleClass().add("state-green");
-        }
-    }
-
-    private void addSpots() {
-//        TODO: JSON File hierop toepassen. Nu is het nog hardcoded.
-        BuildingSpot buildingSpot = new BuildingSpot(new UnderMaintenance());
-        buildingSpot.createPlaceable(new House("Vakantiehuis 1"));
-        BuildingSpot sanitair = new BuildingSpot(new UnderMaintenance());
-        sanitair.createPlaceable(new Sanitair("Sanitair 1"));
-        BuildingSpot laundry = new BuildingSpot(new Reserved());
-        laundry.createPlaceable(new Laundry("Laundry 1"));
-        BuildingSpot tiki = new BuildingSpot(new UnderMaintenance());
-        tiki.createPlaceable(new TikiTent("Tiki-Tent 1"));
-        for (int i = 0; i < 60; i++) {
-            switch (i + 1) {
-//                TODO: Nu nog standaard een bringable spot, kan uiteraard ook een buildingspot zijn. Moet ook uit de JSON komen.
-                case 2 -> {
-                    buildingSpot.setSpotNr(i + 1);
-                    spotsList.add(buildingSpot);
-                }
-                case 12 -> {
-                    sanitair.setSpotNr(i + 1);
-                    spotsList.add(sanitair);
-                }
-                case 15 -> {
-                    laundry.setSpotNr(i + 1);
-                    spotsList.add(laundry);
-                }
-                case 35 -> {
-                    tiki.setSpotNr(i + 1);
-                    spotsList.add(tiki);
-                }
-                default -> {
-                    Spot spot = new BringableSpot(new Free());
-                    spot.setSpotNr(i + 1);
-                    spotsList.add(spot);
-                }
-            }
         }
     }
 
@@ -280,13 +237,23 @@ public class UserInterface extends Application {
             }
         }
 
+        for(Reservation res : camping.getOrderBook().getReservations().values()){
+            if (res.getReservable() == spot || res.getReservable() == spot.getPlaceable()) {
+                if ((res.getArrivaldate().isBefore(arrivalDate) && res.getDeparturedate().isAfter(arrivalDate)) ||
+                        (res.getArrivaldate().isBefore(departureDate) && res.getDeparturedate().isAfter(departureDate))) {
+                    showPopup("Tijdens deze data staat er al een reservering gepland.", 3, false);
+                    return;
+                }
+            }
+        }
+
         if (reservable != null) {
             // If reservable is not null create reservation with created variables.
             Reservation reservation = new Reservation(reservable, name, arrivalDate, departureDate, "#" + spot.getSpotNr() + camping.getOrderBook().getReservations().size(), placeable);
             // Add reservation to orderbook of camping.
             camping.getOrderBook().addReservation(camping.getOrderBook().getReservations().size(), reservation);
             // Shows popup with success message.
-            showPopup("Reservering succesvol aangemaakt.", 3);
+            showPopup("Reservering succesvol aangemaakt.", 3, true);
             // If reservation is during current day then change state to reserved and add placeable to spot.
             if (reservation.getArrivaldate().isBefore(LocalDate.now()) && reservation.getDeparturedate().isAfter(LocalDate.now())) {
                 spot.setState(new Reserved());
@@ -299,7 +266,7 @@ public class UserInterface extends Application {
 
     }
 
-    private void showPopup(String message, int seconds) {
+    private void showPopup(String message, int seconds, boolean succes) {
         Stage popup = new Stage();
         popup.initStyle(StageStyle.TRANSPARENT);
 
@@ -308,7 +275,11 @@ public class UserInterface extends Application {
         Label popupMessage = new Label(message);
         popupMessage.getStyleClass().add("popup-text");
         popupLayout.getChildren().add(popupMessage);
-        popupLayout.getStyleClass().add("popup-success");
+        if (succes) {
+            popupLayout.getStyleClass().add("popup-success");
+        } else {
+            popupLayout.getStyleClass().add("popup-error");
+        }
 
         // Create scene.
         Scene scene = new Scene(popupLayout, 800, 50);
