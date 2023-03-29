@@ -1,13 +1,14 @@
 package com.example.campingdekiezelsteen;
 
+import com.example.campingdekiezelsteen.State.Free;
 import com.example.campingdekiezelsteen.State.State;
 
 public class BringableSpot extends Spot implements Reservable {
     private String style = "";
     private State state;
 
-    public BringableSpot(State state) {
-        this.state = state;
+    public BringableSpot() {
+        this.state = new Free();
     }
 
     @Override

@@ -1,0 +1,13 @@
+{
+  "spots": [
+    {
+      "type": "bringable"
+    },
+    {
+      "type": "building"
+    }
+  ],
+  "reservations": [
+    {}
+  ]
+}
