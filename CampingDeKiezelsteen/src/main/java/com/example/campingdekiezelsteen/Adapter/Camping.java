@@ -19,7 +19,7 @@ public class Camping {
     {
         blueprint = new Blueprint("bluePrint");
         System.out.println(name);
-        addSpots();
+//        addSpots();
     }
 
     public Blueprint getBlueprint() {

@@ -4,7 +4,77 @@
       "type": "bringable"
     },
     {
-      "type": "building"
+      "type": "building",
+      "placeable": {
+        "type": "house",
+        "name": "De zandkorrel"
+      }
+    },
+    {
+      "type": "building",
+      "placeable": {
+        "type": "house",
+        "name": "De kei"
+      }
+    },
+    {
+      "type": "building",
+      "placeable": {
+        "type": "sanitair",
+        "name": "Sanitair"
+      }
+    },
+    {
+      "type": "building",
+      "placeable": {
+        "type": "laundry",
+        "name": "Washok"
+      }
+    },
+    {
+      "type": "bringable"
+    },
+    {
+      "type": "bringable"
+    },
+    {
+      "type": "bringable"
+    },
+    {
+      "type": "bringable"
+    },
+    {
+      "type": "building",
+      "placeable": {
+        "type": "tikitent",
+        "name": "Rubberen eend"
+      }
+    },
+    {
+      "type": "building",
+      "placeable": {
+        "type": "tikitent",
+        "name": "Halsketting"
+      }
+    },
+    {
+      "type": "bringable"
+    },
+    {
+      "type": "building",
+      "placeable": {
+        "type": "house",
+        "name": "De grindtegel"
+      }
+    },
+    {
+      "type": "bringable"
+    },
+    {
+      "type": "bringable"
+    },
+    {
+      "type": "bringable"
     }
   ],
   "reservations": [

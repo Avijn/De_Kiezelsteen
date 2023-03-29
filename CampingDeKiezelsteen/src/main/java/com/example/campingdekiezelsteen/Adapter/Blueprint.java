@@ -1,10 +1,7 @@
 package com.example.campingdekiezelsteen.Adapter;
 
-import com.example.campingdekiezelsteen.BringableSpot;
-import com.example.campingdekiezelsteen.BuildingSpot;
-import com.example.campingdekiezelsteen.Spot;
-import com.example.campingdekiezelsteen.State.Free;
-import com.example.campingdekiezelsteen.UserInterface;
+import com.example.campingdekiezelsteen.*;
+import com.example.campingdekiezelsteen.State.Reserved;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -120,9 +117,25 @@ public class Blueprint {
             switch (elementObject.get("type").getAsString()) {
                 case "bringable" -> {
                     spots.put(counter, new BringableSpot());
+                    spots.get(counter).setSpotNr(counter);
                 }
                 case "building" -> {
                     spots.put(counter, new BuildingSpot());
+                    JsonObject placeable = (JsonObject) elementObject.get("placeable");
+                    switch (placeable.get("type").getAsString()) {
+                        case "house" -> spots.get(counter).setPlaceable(new House(placeable.get("name").getAsString()));
+                        case "tikitent" -> spots.get(counter).setPlaceable(new TikiTent(placeable.get("name").getAsString()));
+                        case "laundry" -> {
+                            spots.get(counter).setPlaceable(new Laundry(placeable.get("name").getAsString()));
+                            spots.get(counter).setState(new Reserved());
+                        }
+                        case "sanitair" -> {
+                            spots.get(counter).setPlaceable(new Sanitair(placeable.get("name").getAsString()));
+                            spots.get(counter).setState(new Reserved());
+                        }
+                        default -> {
+                        }
+                    }
                 }
                 default -> {
                 }

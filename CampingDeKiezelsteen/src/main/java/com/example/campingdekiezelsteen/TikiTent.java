@@ -7,7 +7,7 @@ public class TikiTent extends Building implements Reservable {
     private String style = "tikitent";
 
     public TikiTent(String name) {
-        super("Tiki-tent");
+        super(name);
     }
 
     @Override
