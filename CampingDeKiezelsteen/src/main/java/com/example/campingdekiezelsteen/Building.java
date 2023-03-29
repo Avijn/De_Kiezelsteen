@@ -3,7 +3,10 @@ package com.example.campingdekiezelsteen;
 import java.util.ArrayList;
 
 public abstract class Building extends Placeable {
-    private String name;
+
+    public Building(String name) {
+        super(name);
+    }
 
     public void clean(){    }
 
@@ -35,15 +38,5 @@ public abstract class Building extends Placeable {
         checklistitems.add("Wasbakken schoonmaken");
         checklistitems.add("Vloeren stofzuigen/ dweilen");
         return checklistitems;
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public void setName(String name) {
-        this.name = name;
     }
 }

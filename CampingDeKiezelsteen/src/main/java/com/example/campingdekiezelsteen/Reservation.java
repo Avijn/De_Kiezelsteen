@@ -1,7 +1,6 @@
 package com.example.campingdekiezelsteen;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 public class Reservation {
     private Reservable reservable;
@@ -21,7 +20,6 @@ public class Reservation {
     }
 
     //    GETTERS AND SETTERS:
-
     public Reservable getReservable() {
         return reservable;
     }

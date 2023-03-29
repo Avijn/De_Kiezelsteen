@@ -1,7 +1,11 @@
 package com.example.campingdekiezelsteen;
 
-public class Tent extends Placeable {
+public class Tent extends Bringable {
     private String style = "tent";
+
+    public Tent() {
+        super("Tent");
+    }
 
     @Override
     public String getStyle() {

@@ -6,8 +6,8 @@ import java.util.ArrayList;
 public class TikiTent extends Building implements Reservable {
     private String style = "tikitent";
 
-    public TikiTent(String name){
-        setName(name);
+    public TikiTent(String name) {
+        super("Tiki-tent");
     }
 
     @Override

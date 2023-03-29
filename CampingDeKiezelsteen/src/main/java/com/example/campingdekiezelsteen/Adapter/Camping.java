@@ -1,4 +1,5 @@
 package com.example.campingdekiezelsteen.Adapter;
+import com.example.campingdekiezelsteen.OrderBook;
 
 import com.example.campingdekiezelsteen.*;
 import com.example.campingdekiezelsteen.Adapter.Blueprint;
@@ -12,6 +13,7 @@ import java.util.Map;
 public class Camping {
     private Blueprint blueprint;
     private OrderBook orderBook = new OrderBook();
+    private String name;
 
     public Camping(String name)
     {
@@ -36,9 +38,6 @@ public class Camping {
         this.orderBook = orderBook;
     }
 
-
-
-
     private void addSpots() {
         Map<Integer, Spot> spotsList = new HashMap<>();
 //        TODO: JSON File hierop toepassen. Nu is het nog hardcoded.
@@ -59,23 +58,31 @@ public class Camping {
                 }
                 case 12 -> {
                     sanitair.setSpotNr(i + 1);
-                    spotsList.put(i+1, sanitair);
+                    spotsList.put(i + 1, sanitair);
                 }
                 case 15 -> {
                     laundry.setSpotNr(i + 1);
-                    spotsList.put(i+1, laundry);
+                    spotsList.put(i + 1, laundry);
                 }
                 case 35 -> {
                     tiki.setSpotNr(i + 1);
-                    spotsList.put(i+1, tiki);
+                    spotsList.put(i + 1, tiki);
                 }
                 default -> {
                     Spot spot = new BringableSpot(new Free());
                     spot.setSpotNr(i + 1);
-                    spotsList.put(i+1, spot);
+                    spotsList.put(i + 1, spot);
                 }
             }
         }
         blueprint.setSpots(spotsList);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

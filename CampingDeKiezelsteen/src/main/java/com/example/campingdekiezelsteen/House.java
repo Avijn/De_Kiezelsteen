@@ -6,7 +6,7 @@ public class House extends Building implements Reservable {
     private String style = "house";
 
     public House(String name){
-        setName(name);
+        super(name);
     }
 
     @Override

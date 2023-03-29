@@ -6,7 +6,7 @@ public class Laundry extends Building {
     private String style = "laundry";
 
     public Laundry(String name){
-        setName(name);
+        super(name);
     }
 
     @Override
