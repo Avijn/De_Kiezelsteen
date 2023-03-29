@@ -1,6 +1,13 @@
 package com.example.campingdekiezelsteen;
 
-public class House extends Building {
+import java.util.ArrayList;
+
+public class House extends Building implements Reservable {
+    private String style = "house";
+
+    public House(String name){
+        super(name);
+    }
 
     @Override
     public void cleanWindows() {
@@ -10,5 +17,26 @@ public class House extends Building {
     @Override
     public void cleanSheets() {
         super.cleanSheets();
+    }
+
+    @Override
+    public void reserve() {
+
+    }
+
+    @Override
+    public ArrayList<String> getChecklist() {
+        ArrayList<String> checklistitems = new ArrayList<>();
+        checklistitems.add("Ramen lappen");
+        checklistitems.add("Bedden opmaken");
+        return checklistitems;
+    }
+
+    public String getStyle() {
+        return style;
+    }
+
+    public void setStyle(String style) {
+        this.style = style;
     }
 }

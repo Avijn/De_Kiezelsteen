@@ -1,6 +1,9 @@
-
 .bluePrint {
     -fx-background-color: #e8ffdd;
+    -fx-background-image: url("bg.png");
+    -fx-background-repeat: stretch;
+    -fx-background-size: 700 600;
+    -fx-background-position: center center;
 }
 
 .infoBlock {
@@ -14,14 +17,172 @@
     -fx-font-size: 24;
 }
 
-.state-green { -fx-background-color: rgba(85, 255, 0, 0.2); }
-.state-green:hover { -fx-background-color: rgba(82, 255, 0, 0.4); }
-.state-green:pressed { -fx-background-color: rgba(82, 255, 0, 0.6); }
+.transparent {
+    -fx-background-radius: 4;
+    -fx-alignment: center;
+}
 
-.state-red { -fx-background-color: rgba(255, 0, 0, 0.2); }
-.state-red:hover { -fx-background-color: rgba(255, 0, 0, 0.4); }
-.state-red:pressed { -fx-background-color: rgba(255, 0, 0, 0.6); }
+.state-green {
+    -fx-background-color: rgba(85, 255, 0, 0.2);
+}
 
-.state-orange { -fx-background-color: rgba(255, 166, 0, 0.2); }
-.state-orange:hover { -fx-background-color: rgba(255, 166, 0, 0.4); }
-.state-orange:pressed { -fx-background-color: rgba(255, 166, 0, 0.6); }
+.state-green:hover {
+    -fx-background-color: rgba(82, 255, 0, 0.4);
+}
+
+.state-green:pressed {
+    -fx-background-color: rgba(82, 255, 0, 0.6);
+}
+
+.state-red {
+    -fx-background-color: rgba(255, 0, 0, 0.2);
+}
+
+.state-red:hover {
+    -fx-background-color: rgba(255, 0, 0, 0.4);
+}
+
+.state-red:pressed {
+    -fx-background-color: rgba(255, 0, 0, 0.6);
+}
+
+.state-orange {
+    -fx-background-color: rgba(255, 166, 0, 0.2);
+}
+
+.state-orange:hover {
+    -fx-background-color: rgba(255, 166, 0, 0.4);
+}
+
+.state-orange:pressed {
+    -fx-background-color: rgba(255, 166, 0, 0.6);
+}
+
+.tikitent {
+    -fx-background-image: url("tikitent.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 60 60;
+    -fx-background-position: center center;
+}
+
+.house {
+    -fx-background-image: url("house.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 60 60;
+    -fx-background-position: center center;
+}
+
+.sanitair {
+    -fx-background-image: url("sanitair.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 60 60;
+    -fx-background-position: center center;
+}
+
+.laundry {
+    -fx-background-image: url("laundry.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 60 60;
+    -fx-background-position: center center;
+}
+
+.tent {
+    -fx-background-image: url("tent.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 60 60;
+    -fx-background-position: center center;
+}
+
+.caravan {
+    -fx-background-image: url("caravan.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 60 60;
+    -fx-background-position: center center;
+}
+
+.camper{
+    -fx-background-image: url("camper.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 60 60;
+    -fx-background-position: center center;
+}
+
+.popup-success {
+    -fx-background-color: #019801;
+    -fx-background-radius: 8;
+}
+
+.popup-error {
+    -fx-background-color: #b03030;
+    -fx-background-radius: 8;
+}
+
+.popup-text {
+    -fx-text-fill: white;
+    -fx-alignment: center;
+    -fx-min-width: 800;
+    -fx-min-height: 50;
+    -fx-font-family: fantasy;
+    -fx-font-size: 18;
+    -fx-font-weight: 500;
+}
+
+.text-label {
+    -fx-font-family: fantasy;
+    -fx-font-size: 16;
+    -fx-padding: 5 0;
+    -fx-font-weight: 300;
+}
+
+.info-text {
+    -fx-font-family: fantasy;
+    -fx-font-size: 12;
+    -fx-padding: 5 0;
+    -fx-font-weight: 300;
+}
+
+.info-text .box {
+    -fx-background-color: white;
+    -fx-border-color:grey;
+    -fx-border-radius: 3;
+}
+
+.info-text:selected .mark {
+    -fx-background-color: white;
+}
+
+.info-text:selected .box {
+    -fx-background-color: #3d7333;
+}
+
+.text-field-label {
+    -fx-font-family: fantasy;
+    -fx-font-size: 14;
+    -fx-padding: 10 0 0 0;
+    -fx-font-weight: 500;
+}
+
+.text-field {
+    -fx-background-color: #efefef;
+    -fx-border-insets: 5 0;
+    -fx-font-size: 14;
+    -fx-min-width: 260;
+    -fx-background-insets: 5 0;
+    -fx-font-family: fantasy;
+    -fx-padding: 5 5;
+    -fx-min-height: 40;
+}
+
+.submit-button {
+    -fx-border-insets: 20 0;
+    -fx-background-insets: 20 0;
+    -fx-background-color: #efefef;
+    -fx-font-family: fantasy;
+    -fx-font-size: 14;
+    -fx-min-width: 260;
+    -fx-min-height: 80;
+}
+
+.submit-button:pressed {
+    -fx-background-color: #b6c3d2;
+}
