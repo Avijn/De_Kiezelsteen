@@ -278,6 +278,7 @@ public class UserInterface extends Application {
         Label popupMessage = new Label(message);
         popupMessage.getStyleClass().add("popup-text");
         popupLayout.getChildren().add(popupMessage);
+        // Style -> Green or Red.
         if (succes) {
             popupLayout.getStyleClass().add("popup-success");
         } else {
@@ -311,6 +312,7 @@ public class UserInterface extends Application {
         delay.play();
     }
 
+    // Fade transition for popup.
     private FadeTransition fade(boolean fadein, Node node) {
         FadeTransition fade = new FadeTransition();
 
@@ -328,10 +330,10 @@ public class UserInterface extends Application {
             fade.setToValue(0);
         }
 
-        //the transition will set to be auto reversed by setting this to true
+        //the transition will only play once
         fade.setAutoReverse(false);
 
-        //setting Circle as the node onto which the transition will be applied
+        //setting the parameter node as the node onto which the transition will be applied
         fade.setNode(node);
 
         return fade;
