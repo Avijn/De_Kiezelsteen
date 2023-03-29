@@ -1,12 +1,13 @@
 package com.example.campingdekiezelsteen;
 
+import com.example.campingdekiezelsteen.State.Free;
 import com.example.campingdekiezelsteen.State.State;
 
 public class BuildingSpot extends Spot {
     private State state;
 
-    public BuildingSpot(State state) {
-        this.state = state;
+    public BuildingSpot() {
+        this.state = new Free();
     }
 
     @Override

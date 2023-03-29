@@ -19,7 +19,7 @@ public class Camping {
     {
         blueprint = new Blueprint("bluePrint");
         System.out.println(name);
-        addSpots();
+//        addSpots();
     }
 
     public Blueprint getBlueprint() {
@@ -41,13 +41,17 @@ public class Camping {
     private void addSpots() {
         Map<Integer, Spot> spotsList = new HashMap<>();
 //        TODO: JSON File hierop toepassen. Nu is het nog hardcoded.
-        BuildingSpot buildingSpot = new BuildingSpot(new UnderMaintenance());
+        BuildingSpot buildingSpot = new BuildingSpot();
+        buildingSpot.setState(new UnderMaintenance());
         buildingSpot.createPlaceable(new House("Vakantiehuis 1"));
-        BuildingSpot sanitair = new BuildingSpot(new UnderMaintenance());
+        BuildingSpot sanitair = new BuildingSpot();
+        sanitair.setState(new UnderMaintenance());
         sanitair.createPlaceable(new Sanitair("Sanitair 1"));
-        BuildingSpot laundry = new BuildingSpot(new Reserved());
+        BuildingSpot laundry = new BuildingSpot();
+        laundry.setState(new Reserved());
         laundry.createPlaceable(new Laundry("Laundry 1"));
-        BuildingSpot tiki = new BuildingSpot(new UnderMaintenance());
+        BuildingSpot tiki = new BuildingSpot();
+        tiki.setState(new UnderMaintenance());
         tiki.createPlaceable(new TikiTent("Tiki-Tent 1"));
         for (int i = 0; i < 60; i++) {
             switch (i + 1) {
@@ -69,7 +73,7 @@ public class Camping {
                     spotsList.put(i + 1, tiki);
                 }
                 default -> {
-                    Spot spot = new BringableSpot(new Free());
+                    Spot spot = new BringableSpot();
                     spot.setSpotNr(i + 1);
                     spotsList.put(i + 1, spot);
                 }

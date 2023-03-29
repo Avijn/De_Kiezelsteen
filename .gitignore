@@ -161,3 +161,4 @@ replay_pid*
 
 .idea/misc.xml
 # End of https://www.toptal.com/developers/gitignore/api/java,v
+CampingDeKiezelsteen/target/classes/com/example/campingdekiezelsteen/camping.json
