@@ -11,11 +11,7 @@ public abstract class Spot {
         this.state = state;
     }
 
-    public void createPlaceable(Placeable placeable){
-        this.placeable = placeable;
-    }
-
-    public abstract Placeable createPlaceable2(String placeableType);
+    public abstract Placeable createPlaceable(String placeableType);
 
 
 // Getters en setters
@@ -32,8 +28,8 @@ public abstract class Spot {
         return placeable;
     }
 
-    public void setPlaceable(Placeable placeable) {
-        this.placeable = placeable;
+    public void setPlaceable(String placeable) {
+        this.placeable = createPlaceable(placeable);
     }
 
     public int getSpotNr() {

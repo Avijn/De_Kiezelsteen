@@ -27,7 +27,7 @@ public class Blueprint {
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
-        createSpots();
+        createSpotsAndGetReservations();
     }
 
     public String getBackground() {
@@ -65,6 +65,11 @@ public class Blueprint {
         }
     }
 
+    private String getFileExtension(File file){
+        String fileName = file.getName();
+        return fileName.split("\\.")[1].toLowerCase();
+    }
+
     /**
      * <summary>
      * Checks if the uploaded file is either <b>JSON</b> or <b>XML</b> <br />
@@ -73,22 +78,40 @@ public class Blueprint {
      * <b>Neither</b> : Does nothing except for a SOUT("File is not a xml or json file.");
      * </summary>
      */
-    public void createSpots() {
+    public void createSpotsAndGetReservations() {
         if (file.isFile()) {
-            String fileName = file.getName();
-            String extension = fileName.split("\\.")[1].toLowerCase();
-            switch (extension) {
-                case "json":
+            switch (getFileExtension(file)) {
+                case "json" -> {
                     createSpotsFromJson();
-                    break;
-                case "xml":
+                    createReservationsFromJson();
+                }
+                case "xml" -> {
                     BlueprintXMLAdapter xmlAdapter = new BlueprintXMLAdapter();
                     xmlAdapter.createSpotsFromXML(file);
-                    break;
-                default:
-                    System.out.println("File is not a xml or json file.");
-                    break;
+                }
+                default -> System.out.println("File is not a xml or json file.");
             }
+        }
+    }
+
+    public void createReservationsFromJson(){
+        JsonParser parser = new JsonParser();
+        JsonArray jsonArray = null;
+
+        try {
+            JsonObject o = (JsonObject) parser.parse(new FileReader(file));
+            jsonArray = o.get("reservations").getAsJsonArray();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        int counter = 1;
+
+        assert jsonArray != null;
+        for (JsonElement element : jsonArray) {
+            JsonObject elementObject = element.getAsJsonObject();
+
+            counter++;
         }
     }
 
@@ -122,19 +145,10 @@ public class Blueprint {
                 case "building" -> {
                     spots.put(counter, new BuildingSpot());
                     JsonObject placeable = (JsonObject) elementObject.get("placeable");
-                    switch (placeable.get("type").getAsString()) {
-                        case "house" -> spots.get(counter).setPlaceable(new House(placeable.get("name").getAsString()));
-                        case "tikitent" -> spots.get(counter).setPlaceable(new TikiTent(placeable.get("name").getAsString()));
-                        case "laundry" -> {
-                            spots.get(counter).setPlaceable(new Laundry(placeable.get("name").getAsString()));
-                            spots.get(counter).setState(new Reserved());
-                        }
-                        case "sanitair" -> {
-                            spots.get(counter).setPlaceable(new Sanitair(placeable.get("name").getAsString()));
-                            spots.get(counter).setState(new Reserved());
-                        }
-                        default -> {
-                        }
+                    spots.get(counter).setPlaceable(placeable.get("type").getAsString());
+                    String type = placeable.get("type").getAsString();
+                    if ("laundry".equals(type) || "sanitair".equals(type)) {
+                        spots.get(counter).setState(new Reserved());
                     }
                 }
                 default -> {
@@ -142,6 +156,5 @@ public class Blueprint {
             }
             counter++;
         }
-        System.out.println(spots);
     }
 }

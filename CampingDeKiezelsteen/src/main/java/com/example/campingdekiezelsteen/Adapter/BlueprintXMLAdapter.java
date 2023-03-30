@@ -34,34 +34,34 @@ public class BlueprintXMLAdapter {
 
                 if (element.getElementsByTagName("type").item(0).getTextContent().equals("building")) {
                     spots.put(number, new BuildingSpot());
-                    switch(element.getElementsByTagName("placeabletype").item(0).getTextContent()) {
-                        case "house" -> {
-                            spots.get(number).setPlaceable(new House(
-                                    element.getElementsByTagName("name").item(0).getTextContent()
-                            ));
-                            spots.get(number).setSpotNr(number);
-                        }
-                        case "tikitent" -> {
-                            spots.get(number).setPlaceable(new TikiTent(
-                                    element.getElementsByTagName("name").item(0).getTextContent()
-                            ));
-                            spots.get(number).setSpotNr(number);
-                        }
-                        case "laundry" -> {
-                            spots.get(number).setPlaceable(new Laundry(
-                                    element.getElementsByTagName("name").item(0).getTextContent()
-                            ));
-                            spots.get(number).setState(new Reserved());
-                            spots.get(number).setSpotNr(number);
-                        }
-                        case "sanitair" -> {
-                            spots.get(number).setPlaceable(new Sanitair(
-                                    element.getElementsByTagName("name").item(0).getTextContent()
-                            ));
-                            spots.get(number).setState(new Reserved());
-                            spots.get(number).setSpotNr(number);
-                        }
-                    }
+//                    switch(element.getElementsByTagName("placeabletype").item(0).getTextContent()) {
+//                        case "house" -> {
+//                            spots.get(number).setPlaceable(new House(
+//                                    element.getElementsByTagName("name").item(0).getTextContent()
+//                            ));
+//                            spots.get(number).setSpotNr(number);
+//                        }
+//                        case "tikitent" -> {
+//                            spots.get(number).setPlaceable(new TikiTent(
+//                                    element.getElementsByTagName("name").item(0).getTextContent()
+//                            ));
+//                            spots.get(number).setSpotNr(number);
+//                        }
+//                        case "laundry" -> {
+//                            spots.get(number).setPlaceable(new Laundry(
+//                                    element.getElementsByTagName("name").item(0).getTextContent()
+//                            ));
+//                            spots.get(number).setState(new Reserved());
+//                            spots.get(number).setSpotNr(number);
+//                        }
+//                        case "sanitair" -> {
+//                            spots.get(number).setPlaceable(new Sanitair(
+//                                    element.getElementsByTagName("name").item(0).getTextContent()
+//                            ));
+//                            spots.get(number).setState(new Reserved());
+//                            spots.get(number).setSpotNr(number);
+//                        }
+//                    }
                     continue;
                 }
                 spots.put(number, new BringableSpot());

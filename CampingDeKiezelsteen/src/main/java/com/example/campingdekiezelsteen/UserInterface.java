@@ -192,6 +192,7 @@ public class UserInterface extends Application {
         LocalDate departureDate = LocalDate.now();
         Reservable reservable;
         Placeable placeable = null;
+        String placeableType = "";
 
         if (spot instanceof Reservable) {
             // If spot is reservable set spot as reservable for reservation.
@@ -226,6 +227,7 @@ public class UserInterface extends Application {
                 // Else field is Choicebox and spot is instance of reservable.
                 if (spot instanceof Reservable) {
                     ChoiceBox<String> box = (ChoiceBox<String>) item;
+                    placeableType = box.getValue();
                     // Switch case for type of placeable.
                     switch (box.getValue()) {
                         case "Camper" -> placeable = new Camper();
@@ -260,13 +262,11 @@ public class UserInterface extends Application {
             // If reservation is during current day then change state to reserved and add placeable to spot.
             if (reservation.getArrivaldate().isBefore(LocalDate.now()) && reservation.getDeparturedate().isAfter(LocalDate.now())) {
                 spot.setState(new Reserved());
-                if (placeable != null) {
-                    spot.setPlaceable(placeable);
+                if (!placeableType.equals("")) {
+                    spot.setPlaceable(placeableType);
                 }
             }
         }
-
-
     }
 
     private void showPopup(String message, int seconds, boolean succes) {

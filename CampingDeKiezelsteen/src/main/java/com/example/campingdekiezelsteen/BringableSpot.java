@@ -17,18 +17,13 @@ public class BringableSpot extends Spot implements Reservable {
     }
 
     @Override
-    public Placeable createPlaceable2(String placeableType) {
+    public Placeable createPlaceable(String placeableType) {
         Placeable placeable = null;
-        switch(placeableType) {
-            case "Tent":
-                placeable = new Tent();
-                break;
-            case "Camper":
-                placeable = new Camper();
-                break;
-            case "Caravan":
-                placeable = new Caravan();
-                break;
+        switch (placeableType) {
+            case "tent" -> placeable = new Tent();
+            case "camper" -> placeable = new Camper();
+            case "caravan" -> placeable = new Caravan();
+            default -> System.out.println("No such placeable exists.");
         }
         return placeable;
     }
