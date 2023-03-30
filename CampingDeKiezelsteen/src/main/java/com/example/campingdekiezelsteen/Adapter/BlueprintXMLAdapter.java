@@ -34,34 +34,26 @@ public class BlueprintXMLAdapter {
 
                 if (element.getElementsByTagName("type").item(0).getTextContent().equals("building")) {
                     spots.put(number, new BuildingSpot());
-//                    switch(element.getElementsByTagName("placeabletype").item(0).getTextContent()) {
-//                        case "house" -> {
-//                            spots.get(number).setPlaceable(new House(
-//                                    element.getElementsByTagName("name").item(0).getTextContent()
-//                            ));
-//                            spots.get(number).setSpotNr(number);
-//                        }
-//                        case "tikitent" -> {
-//                            spots.get(number).setPlaceable(new TikiTent(
-//                                    element.getElementsByTagName("name").item(0).getTextContent()
-//                            ));
-//                            spots.get(number).setSpotNr(number);
-//                        }
-//                        case "laundry" -> {
-//                            spots.get(number).setPlaceable(new Laundry(
-//                                    element.getElementsByTagName("name").item(0).getTextContent()
-//                            ));
-//                            spots.get(number).setState(new Reserved());
-//                            spots.get(number).setSpotNr(number);
-//                        }
-//                        case "sanitair" -> {
-//                            spots.get(number).setPlaceable(new Sanitair(
-//                                    element.getElementsByTagName("name").item(0).getTextContent()
-//                            ));
-//                            spots.get(number).setState(new Reserved());
-//                            spots.get(number).setSpotNr(number);
-//                        }
-//                    }
+                    switch(element.getElementsByTagName("placeabletype").item(0).getTextContent()) {
+                        case "house" -> {
+                            spots.get(number).setPlaceable("house");
+                            spots.get(number).setSpotNr(number);
+                        }
+                        case "tikitent" -> {
+                            spots.get(number).setPlaceable("tikitent");
+                            spots.get(number).setSpotNr(number);
+                        }
+                        case "laundry" -> {
+                            spots.get(number).setPlaceable("laundry");
+                            spots.get(number).setState(new Reserved());
+                            spots.get(number).setSpotNr(number);
+                        }
+                        case "sanitair" -> {
+                            spots.get(number).setPlaceable("sanitair");
+                            spots.get(number).setState(new Reserved());
+                            spots.get(number).setSpotNr(number);
+                        }
+                    }
                     continue;
                 }
                 spots.put(number, new BringableSpot());
@@ -72,5 +64,25 @@ public class BlueprintXMLAdapter {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public Map<Integer, Reservation> createReservationsFromXML(File file){
+        Map<Integer, Reservation> spots = new HashMap<Integer, Reservation>();
+
+        try {
+            file = new File(UserInterface.class.getResource(file.getName()).toURI());
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            StringBuilder xmlStringBuilder = new StringBuilder();
+            ByteArrayInputStream input = new ByteArrayInputStream(
+                    xmlStringBuilder.toString().getBytes("UTF-8")
+            );
+            Document xml = builder.parse(file);
+            NodeList spotXML = xml.getElementsByTagName("reservations");
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }

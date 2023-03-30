@@ -94,6 +94,8 @@ public class Blueprint {
         }
     }
 
+    //Todo : Its not possible to parse the LocalDate for some reason, its accessor in the library is private final
+    // We should probably change this to some other datatype for date
     public void createReservationsFromJson(){
         JsonParser parser = new JsonParser();
         JsonArray jsonArray = null;

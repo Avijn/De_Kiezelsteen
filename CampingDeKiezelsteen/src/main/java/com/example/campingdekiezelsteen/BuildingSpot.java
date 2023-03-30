@@ -15,6 +15,7 @@ public class BuildingSpot extends Spot {
         this.state = state;
     }
 
+    //TODO: This code removes the option to name a house
     @Override
     public Placeable createPlaceable(String placeableType) {
         Placeable placeable = null;
