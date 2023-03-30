@@ -2,6 +2,7 @@ module com.example.campingdekiezelsteen {
     requires javafx.controls;
     requires javafx.fxml;
     requires com.google.gson;
+    requires java.xml;
 
 
     opens com.example.campingdekiezelsteen to javafx.fxml;

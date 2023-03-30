@@ -1,0 +1,84 @@
+<?xml version = "1.0"?>
+<xml>
+    <spots>
+        <spot>
+            <type>bringable</type>
+        </spot>
+        <spot>
+            <type>building</type>
+            <placeable>
+                <placeabletype>house</placeabletype>
+                <name>De zandkorrel</name>
+            </placeable>
+        </spot>
+        <spot>
+            <type>building</type>
+            <placeable>
+                <placeabletype>house</placeabletype>
+                <name>De kei</name>
+            </placeable>
+        </spot>
+        <spot>
+            <type>building</type>
+            <placeable>
+                <placeabletype>sanitair</placeabletype>
+                <name>Sanitair</name>
+            </placeable>
+        </spot>
+        <spot>
+            <type>building</type>
+            <placeable>
+                <placeabletype>laundry</placeabletype>
+                <name>Washok</name>
+            </placeable>
+        </spot>
+        <spot>
+            <type>bringable</type>
+        </spot>
+        <spot>
+            <type>bringable</type>
+        </spot>
+        <spot>
+            <type>bringable</type>
+        </spot>
+        <spot>
+            <type>bringable</type>
+        </spot>
+        <spot>
+            <type>building</type>
+            <placeable>
+                <placeabletype>tikitent</placeabletype>
+                <name>Rubberen eend</name>
+            </placeable>
+        </spot>
+        <spot>
+            <type>building</type>
+            <placeable>
+                <placeabletype>tikitent</placeabletype>
+                <name>Halsketting</name>
+            </placeable>
+        </spot>
+        <spot>
+            <type>bringable</type>
+        </spot>
+        <spot>
+            <type>building</type>
+            <placeable>
+                <placeabletype>house</placeabletype>
+                <name>De grindtegel</name>
+            </placeable>
+        </spot>
+        <spot>
+            <type>bringable</type>
+        </spot>
+        <spot>
+            <type>bringable</type>
+        </spot>
+        <spot>
+            <type>bringable</type>
+        </spot>
+    </spots>
+    <reservations>
+
+    </reservations>
+</xml>
