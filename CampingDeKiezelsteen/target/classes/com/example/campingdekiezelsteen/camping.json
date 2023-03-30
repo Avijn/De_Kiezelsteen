@@ -63,12 +63,35 @@
     {
       "type": "building",
       "placeable": {
-        "type": "house",
-        "name": "De grindtegel"
+        "type": "tikitent",
+        "name": "De vlinderrups"
       }
     },
     {
       "type": "bringable"
+    },
+    {
+      "type": "bringable"
+    },
+    {
+      "type": "bringable"
+    },
+    {
+      "type": "building",
+      "placeable": {
+        "type": "tikitent",
+        "name": "Halsketting"
+      }
+    },
+    {
+      "type": "bringable"
+    },
+    {
+      "type": "building",
+      "placeable": {
+        "type": "house",
+        "name": "De grindtegel"
+      }
     },
     {
       "type": "bringable"
