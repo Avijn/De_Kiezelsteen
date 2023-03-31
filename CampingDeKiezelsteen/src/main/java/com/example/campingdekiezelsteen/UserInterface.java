@@ -25,6 +25,9 @@ import javafx.util.Duration;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class UserInterface extends Application {
     private final Pane pane = new Pane();
@@ -94,6 +97,7 @@ public class UserInterface extends Application {
                 }
             }
         }
+
         return gridPane;
     }
 
@@ -106,6 +110,23 @@ public class UserInterface extends Application {
         button.setOnMouseClicked(e -> {
             loadPane(getPaneInfo(spot, button));
         });
+
+        // Change state of sanitair and laundry according to amount of current reservations.
+        if (spot.getPlaceable() != null && (spot.getPlaceable() instanceof Laundry || spot.getPlaceable() instanceof Sanitair)) {
+            // Standard time between cleanings is 12 hours, with every reservation thirty minutes will be subtracted.
+            int minutes = 720 - (30 * camping.getCurrentReservations());
+            ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    spot.setState(new UnderMaintenance());
+                    setButtonStyle(spot, button);
+                }
+            };
+            executorService.schedule(runnable, minutes, TimeUnit.MINUTES);
+            System.out.println(minutes);
+        }
+
         return button;
     }
 

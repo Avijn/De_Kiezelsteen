@@ -6,11 +6,16 @@ import com.example.campingdekiezelsteen.State.UnderMaintenance;
 
 import java.time.LocalDate;
 import java.util.Map;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class Camping {
     private Blueprint blueprint;
     private OrderBook orderBook;
     private String name;
+    private int currentReservations = 0;
 
     public Camping(String name) {
         blueprint = new Blueprint("bluePrint");
@@ -48,8 +53,8 @@ public class Camping {
     }
 
     public void getStatesSpots() {
-        getMaintenanceStates();
         getReservedStates();
+        getMaintenanceStates();
     }
 
     private void getReservedStates() {
@@ -61,6 +66,7 @@ public class Camping {
                             spot.setPlaceable(reservation.getPlaceable().getType());
                         }
                         spot.setState(new Reserved());
+                        currentReservations++;
                     }
                 }
             }
@@ -73,7 +79,7 @@ public class Camping {
             for (Spot spot : blueprint.getSpots().values()) {
                 if (reservation.getReservable().equals(spot.getPlaceable())) {
                     if (spot.getPlaceable() instanceof Building building) {
-                        if (reservation.getArrivaldate().isBefore(LocalDate.now())&& reservation.getDeparturedate().isBefore(LocalDate.now())) {
+                        if (reservation.getArrivaldate().isBefore(LocalDate.now()) && reservation.getDeparturedate().isBefore(LocalDate.now())) {
                             building.used();
                         }
                     }
@@ -87,5 +93,9 @@ public class Camping {
 
     public Boolean currentDay(LocalDate arrivalDate, LocalDate departureDate) {
         return (arrivalDate.isBefore(LocalDate.now()) || arrivalDate.isEqual(LocalDate.now())) && (departureDate.isAfter(LocalDate.now())) || departureDate.isEqual(LocalDate.now());
+    }
+
+    public int getCurrentReservations() {
+        return currentReservations;
     }
 }
