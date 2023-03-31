@@ -147,11 +147,18 @@ public class Blueprint {
                 case "building" -> {
                     spots.put(counter, new BuildingSpot());
                     JsonObject placeable = (JsonObject) elementObject.get("placeable");
-                    spots.get(counter).setPlaceable(placeable.get("type").getAsString());
+
+                    // Creates and sets placeable for spot
                     String type = placeable.get("type").getAsString();
+                    spots.get(counter).setPlaceable(type);
+                    // If type is laundry or sanitair state cannot be free
                     if ("laundry".equals(type) || "sanitair".equals(type)) {
                         spots.get(counter).setState(new Reserved());
                     }
+
+                    // Sets placeable name
+                    String placeableName = placeable.get("name").getAsString();
+                    spots.get(counter).getPlaceable().setName(placeableName);
                 }
                 default -> {
                 }
