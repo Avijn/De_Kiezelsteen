@@ -5,6 +5,7 @@ public class Tent extends Bringable {
 
     public Tent() {
         super("Tent");
+        setType("tent");
     }
 
     @Override

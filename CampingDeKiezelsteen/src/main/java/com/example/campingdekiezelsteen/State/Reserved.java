@@ -42,8 +42,8 @@ public class Reserved implements State {
                 vBox.getChildren().add(getDate(reservation.getArrivaldate().format(formatter), true));
                 vBox.getChildren().add(getDate(reservation.getDeparturedate().format(formatter)
                         , false));
-                if (spot.getClass().isAssignableFrom(BringableSpot.class)) {
-                    vBox.getChildren().add(getPlaceableType(spot.getPlaceable().getName()));
+                if (spot.getClass().isAssignableFrom(BringableSpot.class) && spot.getPlaceable() != null) {
+                    vBox.getChildren().add(getPlaceableType(spot.getPlaceable().getType()));
                 }
         } else if(state != "Niet te reserveren"){
             Label error = new Label("Er is iets misgegaan.");

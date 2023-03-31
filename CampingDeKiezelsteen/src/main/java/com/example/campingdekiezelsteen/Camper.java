@@ -5,6 +5,7 @@ public class Camper extends Bringable {
 
     public Camper() {
         super("Camper");
+        setType("camper");
     }
 
     @Override

@@ -16,21 +16,14 @@ public class BuildingSpot extends Spot {
     }
 
     @Override
-    public Placeable createPlaceable2(String placeableType) {
+    public Placeable createPlaceable(String placeableType) {
         Placeable placeable = null;
-        switch(placeableType) {
-            case "Vakantiehuis":
-                placeable = new House(placeableType+" ");
-                break;
-            case "Tiki-tent":
-                placeable = new TikiTent(placeableType+" ");
-                break;
-            case "Sanitair":
-                placeable = new Sanitair(placeableType+" ");
-                break;
-            case "Laundry":
-                placeable = new Laundry(placeableType+" ");
-                break;
+        switch (placeableType) {
+            case "house" -> placeable = new House("Vakantiehuis");
+            case "tikitent" -> placeable = new TikiTent("Tiki-tent");
+            case "sanitair" -> placeable = new Sanitair("Sanitair");
+            case "laundry" -> placeable = new Laundry("Washok");
+            default -> System.out.println("No such placeable exists.");
         }
         return placeable;
     }

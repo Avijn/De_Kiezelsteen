@@ -24,11 +24,16 @@ import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class UserInterface extends Application {
     private final Pane pane = new Pane();
     private final GridPane gridPane = new GridPane();
+    private final Pane reservationsPane = new Pane();
     private Camping camping;
     private ArrayList<Spot> spotsList = new ArrayList<>();
 
@@ -40,20 +45,11 @@ public class UserInterface extends Application {
     public void start(Stage stage) {
         // Creates camping and gets spots from blueprint.
         camping = new Camping("De Kiezelsteen");
-        spotsList = new ArrayList<>(camping.getBlueprint().getSpots().values());
+        spotsList = new ArrayList<>(camping.getSpots().values());
 
         // Sets up scene.
         Scene scene = new Scene(setupDesign(), 1000, 600);
         scene.getStylesheets().add(UserInterface.class.getResource("style.css").toExternalForm());
-
-//        CREATED FOR DAILY REFRESH, BUT NOT NECESSARY RIGHT NOW.
-//        LocalTime minutes = LocalTime.MIDNIGHT.minusSeconds(LocalTime.now().toSecondOfDay());
-//        Timer timer = new Timer();
-//        timer.schedule(new TimerTask(){
-//            public void run(){
-//                System.out.println("Im Running..."+minutes.toSecondOfDay() * 60 * 60 * 24);
-//            }
-//        }, new Date(), minutes.toSecondOfDay() * 60 * 60 * 24);
 
         stage.setScene(scene);
         // Disable resizable property.
@@ -65,8 +61,7 @@ public class UserInterface extends Application {
         HBox hBox = new HBox();
         hBox.setFillHeight(true);
         hBox.getChildren().add(setupGrid());
-        pane.getStyleClass().add("infoBlock");
-        hBox.getChildren().add(pane);
+        hBox.getChildren().add(setupRightBlock());
         return hBox;
     }
 
@@ -94,6 +89,7 @@ public class UserInterface extends Application {
                 }
             }
         }
+
         return gridPane;
     }
 
@@ -105,14 +101,61 @@ public class UserInterface extends Application {
         // Shows infoblock when button is clicked
         button.setOnMouseClicked(e -> {
             loadPane(getPaneInfo(spot, button));
+            getReservationsInfo(spot);
         });
+
+        // Change state of sanitair and laundry according to amount of current reservations.
+        if (spot.getPlaceable() != null && (spot.getPlaceable() instanceof Laundry || spot.getPlaceable() instanceof Sanitair)) {
+            needsCleaningCalculator(spot, button);
+        }
+
         return button;
+    }
+
+    private void needsCleaningCalculator(Spot spot, Button button) {
+        // Standard time between cleanings is 12 hours, with every reservation thirty minutes will be subtracted.
+        int minutes = 720 - (30 * camping.getCurrentReservations());
+        ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                spot.setState(new UnderMaintenance());
+                setButtonStyle(spot, button);
+                needsCleaningCalculator(spot, button);
+            }
+        };
+        executorService.schedule(runnable, minutes, TimeUnit.MINUTES);
+    }
+
+    private Accordion setupRightBlock() {
+        // Create accordion.
+        Accordion accordion = new Accordion();
+        accordion.setMinWidth(300);
+        // Set styles of child panes.
+        pane.getStyleClass().add("infoBlock");
+        reservationsPane.getStyleClass().add("infoBlock");
+        // Create titledpanes with child panes.
+        TitledPane pane1 = new TitledPane("Info", pane);
+        TitledPane pane2 = new TitledPane("Reserveringen", reservationsPane);
+        // Add child panes to accordion.
+        accordion.getPanes().add(pane1);
+        accordion.getPanes().add(pane2);
+        // Set top pane to expanded.
+        accordion.setExpandedPane(pane1);
+        return accordion;
+    }
+
+    private void loadPane(VBox vBox) {
+        // Clears infoblock
+        pane.getChildren().clear();
+        // Adds right info in infoblock
+        pane.getChildren().add(vBox);
     }
 
     private VBox getPaneInfo(Spot spot, Button button) {
         // Creates info block
         VBox vBox = spot.getState().buttonClicked(spot);
-        if (spot.getState().getClass().isAssignableFrom(Reserved.class)){
+        if (spot.getState().getClass().isAssignableFrom(Reserved.class)) {
             if (!camping.getOrderBook().getReservations().isEmpty()) {
                 for (Reservation reservation : camping.getOrderBook().getReservations().values()) {
                     if (reservation.getReservable() == spot || reservation.getReservable() == spot.getPlaceable()) {
@@ -129,10 +172,21 @@ public class UserInterface extends Application {
                 // If state is under maintenance, then make button change state.
                 if (spot.getState().getClass().isAssignableFrom(UnderMaintenance.class)) {
                     State newState = new Free();
-                    if (spot.getPlaceable() != null && (spot.getPlaceable().getClass().isAssignableFrom(Laundry.class) || spot.getPlaceable().getClass().isAssignableFrom(Sanitair.class))) {
-                        newState = new Reserved();
+                    if (spot.getPlaceable() != null) {
+                        if (spot.getPlaceable().getClass().isAssignableFrom(Laundry.class) || spot.getPlaceable().getClass().isAssignableFrom(Sanitair.class)) {
+                            newState = new Reserved();
+                        }
+                        for (Reservation res : camping.getOrderBook().getReservations().values()) {
+                            if (res.getReservable().equals(spot.getPlaceable())) {
+                                if (camping.currentDay(res.getArrivaldate(), res.getDeparturedate())) {
+                                    newState = new Reserved();
+                                }
+                            }
+                        }
                     }
                     // Changes state
+                    Building building = (Building) spot.getPlaceable();
+                    building.clean();
                     spot.changeState(newState);
                     showPopup("Status succesvol veranderd.", 3, true);
                     // Reloads button and info block
@@ -151,25 +205,63 @@ public class UserInterface extends Application {
         return vBox;
     }
 
-    private void loadPane(VBox vBox) {
-        // Clears infoblock
-        pane.getChildren().clear();
-        // Adds right info in infoblock
-        pane.getChildren().add(vBox);
+    private void getReservationsInfo(Spot spot) {
+        // Clear out the pane.
+        reservationsPane.getChildren().clear();
+        // Create new accordion for all reservations.
+        Accordion accordion = new Accordion();
+        accordion.setPadding(new Insets(20));
+        // Get all reservations with this spot.
+        for (Reservation res : camping.getOrderBook().getReservations().values()) {
+            if (res.getReservable() == spot || res.getReservable() == spot.getPlaceable()) {
+                // Create pane and titledpane for each reservation.
+                Pane pane = new Pane();
+                pane.getStyleClass().add("infoBlock");
+                // Set pane content with info of reservation.
+                pane.getChildren().add(getInfo(res));
+                TitledPane titledPane = new TitledPane(res.getId(), pane);
+                // Add titledpane to accordion.
+                accordion.getPanes().add(titledPane);
+            }
+        }
+        // Add accordion to pane.
+        reservationsPane.getChildren().add(accordion);
+    }
+
+    private VBox getInfo(Reservation reservation) {
+        VBox vBox = new VBox();
+        vBox.setPadding(new Insets(20));
+        // Formatter for dates.
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy");
+        // Get name, arrivaldate and departuredate from reservation.
+        vBox.getChildren().add(getSingularLine("Hoofdboeker: ", reservation.getCustomerName()));
+        vBox.getChildren().add(getSingularLine("Aankomstdatum: ", reservation.getArrivaldate().format(formatter)));
+        vBox.getChildren().add(getSingularLine("Vertrekdatum: ", reservation.getDeparturedate().format(formatter)));
+        return vBox;
+    }
+
+    private HBox getSingularLine(String title, String info) {
+        HBox hBox = new HBox();
+        hBox.setPadding(new Insets(20, 0, 0, 0));
+        // Create title and set style
+        Label Title = new Label(title);
+        Title.setPrefWidth(130);
+        Title.getStyleClass().add("info-text");
+        // Create infotext and set style
+        Label Info = new Label(info);
+        Info.setPrefWidth(130);
+        Info.getStyleClass().add("info-text");
+        // Add both to hbox.
+        hBox.getChildren().add(Title);
+        hBox.getChildren().add(Info);
+        return hBox;
     }
 
     private void setButtonStyle(Spot spot, Button button) {
         // Clears all styles
         button.getStyleClass().clear();
-        // Adds standard style to all buttons
-        for (Reservation reservation : camping.getOrderBook().getReservations().values()) {
-            if (reservation.getReservable().equals(spot) || reservation.getReservable().equals(spot.getPlaceable())) {
-                if (reservation.getArrivaldate().isBefore(LocalDate.now()) && reservation.getDeparturedate().isAfter(LocalDate.now())) {
-                    spot.setState(new Reserved());
-                }
-            }
-        }
 
+        // Adds standard style to all buttons
         button.getStyleClass().add("transparent");
 
         if (spot.getPlaceable() != null && spot.getPlaceable().getStyle() != "") {
@@ -192,6 +284,7 @@ public class UserInterface extends Application {
         LocalDate departureDate = LocalDate.now();
         Reservable reservable;
         Placeable placeable = null;
+        String placeableType = "";
 
         if (spot instanceof Reservable) {
             // If spot is reservable set spot as reservable for reservation.
@@ -228,9 +321,18 @@ public class UserInterface extends Application {
                     ChoiceBox<String> box = (ChoiceBox<String>) item;
                     // Switch case for type of placeable.
                     switch (box.getValue()) {
-                        case "Camper" -> placeable = new Camper();
-                        case "Caravan" -> placeable = new Caravan();
-                        case "Tent" -> placeable = new Tent();
+                        case "Camper" -> {
+                            placeable = new Camper();
+                            placeableType = "camper";
+                        }
+                        case "Caravan" -> {
+                            placeable = new Caravan();
+                            placeableType = "caravan";
+                        }
+                        case "Tent" -> {
+                            placeable = new Tent();
+                            placeableType = "tent";
+                        }
                         default -> placeable = null;
                     }
 
@@ -240,10 +342,9 @@ public class UserInterface extends Application {
             }
         }
 
-        for(Reservation res : camping.getOrderBook().getReservations().values()){
+        for (Reservation res : camping.getOrderBook().getReservations().values()) {
             if (res.getReservable() == spot || res.getReservable() == spot.getPlaceable()) {
-                if ((res.getArrivaldate().isBefore(arrivalDate) && res.getDeparturedate().isAfter(arrivalDate)) ||
-                        (res.getArrivaldate().isBefore(departureDate) && res.getDeparturedate().isAfter(departureDate))) {
+                if ((res.getArrivaldate().isBefore(arrivalDate) && res.getDeparturedate().isAfter(arrivalDate)) || (res.getArrivaldate().isBefore(departureDate) && res.getDeparturedate().isAfter(departureDate))) {
                     showPopup("Tijdens deze data staat er al een reservering gepland.", 3, false);
                     return;
                 }
@@ -252,21 +353,19 @@ public class UserInterface extends Application {
 
         if (reservable != null) {
             // If reservable is not null create reservation with created variables.
-            Reservation reservation = new Reservation(reservable, name, arrivalDate, departureDate, "#" + spot.getSpotNr() + camping.getOrderBook().getReservations().size(), placeable);
+            Reservation reservation = new Reservation(reservable, name, arrivalDate, departureDate, String.valueOf(camping.getOrderBook().getReservations().size()+1), placeable);
             // Add reservation to orderbook of camping.
-            camping.getOrderBook().addReservation(camping.getOrderBook().getReservations().size(), reservation);
+            camping.getOrderBook().addReservation(camping.getOrderBook().getReservations().size(), reservation, camping);
             // Shows popup with success message.
             showPopup("Reservering succesvol aangemaakt.", 3, true);
             // If reservation is during current day then change state to reserved and add placeable to spot.
-            if (reservation.getArrivaldate().isBefore(LocalDate.now()) && reservation.getDeparturedate().isAfter(LocalDate.now())) {
+            if (camping.currentDay(reservation.getArrivaldate(), reservation.getDeparturedate())) {
                 spot.setState(new Reserved());
-                if (placeable != null) {
-                    spot.setPlaceable(placeable);
+                if (!placeableType.equals("")) {
+                    spot.setPlaceable(placeableType);
                 }
             }
         }
-
-
     }
 
     private void showPopup(String message, int seconds, boolean succes) {

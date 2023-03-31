@@ -10,23 +10,29 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.net.URISyntaxException;
 import java.time.format.DateTimeFormatter;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.jar.JarOutputStream;
 
 public class Blueprint {
     private String background;
     private Map<Integer, Spot> spots;
+    private Map<Integer, Reservation> reservations;
     private File file = new File("");
 
     public Blueprint(String background) {
         this.background = background;
-        this.spots = new HashMap<Integer, Spot>();
+        this.spots = new HashMap<>();
+        this.reservations = new HashMap<>();
         try {
             this.file = new File(UserInterface.class.getResource("camping.json").toURI());
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
-        createSpots();
+        createSpotsAndGetReservations();
     }
 
     public String getBackground() {
@@ -43,6 +49,14 @@ public class Blueprint {
 
     public void setSpots(Map<Integer, Spot> spots) {
         this.spots = spots;
+    }
+
+    public Map<Integer, Reservation> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(Map<Integer, Reservation> reservations) {
+        this.reservations = reservations;
     }
 
     public File getFile() {
@@ -64,6 +78,11 @@ public class Blueprint {
         }
     }
 
+    private String getFileExtension(File file) {
+        String fileName = file.getName();
+        return fileName.split("\\.")[1].toLowerCase();
+    }
+
     /**
      * <summary>
      * Checks if the uploaded file is either <b>JSON</b> or <b>XML</b> <br />
@@ -72,12 +91,10 @@ public class Blueprint {
      * <b>Neither</b> : Does nothing except for a SOUT("File is not a xml or json file.");
      * </summary>
      */
-    public void createSpots() {
+    public void createSpotsAndGetReservations() {
         if (file.isFile()) {
-            String fileName = file.getName();
-            String extension = fileName.split("\\.")[1].toLowerCase();
-            switch (extension) {
-                case "json":
+            switch (getFileExtension(file)) {
+                case "json" -> {
                     createSpotsFromJson();
 
                     createReservationsFromJson();
@@ -88,10 +105,80 @@ public class Blueprint {
                     reservations = xmlAdapter.createReservationsFromXML();
                     xmlAdapter.addReservationsToXML(reservations.get(1));
                     break;
+
                 }
                 default -> System.out.println("File is not a xml or json file.");
             }
         }
+    }
+
+    public void createReservationsFromJson() {
+        JsonParser parser = new JsonParser();
+        JsonArray jsonArray = null;
+
+        // Try to parse file to json array.
+        try {
+            JsonObject o = (JsonObject) parser.parse(new FileReader(file));
+            jsonArray = o.get("reservations").getAsJsonArray();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+
+        assert jsonArray != null;
+        // Loop through all reservations in json file if json array is not null.
+        for (JsonElement element : jsonArray) {
+            JsonObject elementObject = element.getAsJsonObject();
+            // Formatter for date
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+            int id = elementObject.get("id").getAsInt();
+
+            // Parse strings to localdate
+            LocalDate arrivaldate = LocalDate.parse(elementObject.get("arrivaldate").getAsString(), formatter);
+            LocalDate departuredate = LocalDate.parse(elementObject.get("departuredate").getAsString(), formatter);
+
+            // Get reservable
+            int reservableId = elementObject.get("reservable").getAsInt();
+            Reservable reservable = getReservable(reservableId);
+            // Get placeable
+            Placeable placeable = getPlaceable(elementObject);
+
+            // Get name of main booker
+            String name = elementObject.get("mainbooker").getAsString();
+
+            // Create reservation
+            Reservation reservation = new Reservation(reservable, name, arrivaldate, departuredate, String.valueOf(id), placeable);
+
+            // Add reservation to list
+            reservations.put(id, reservation);
+        }
+    }
+
+    private Placeable getPlaceable(JsonObject object){
+       if(object.has("placeable")) {
+           // If object has a placeable then create placeable for the given placeable type.
+           String placeableType = object.get("placeable").getAsString();
+           return spots.get(object.get("reservable").getAsInt()).createPlaceable(placeableType);
+       }
+       // Else return null
+       return null;
+    }
+
+    private Reservable getReservable(int reservableId) {
+        // Get spot from spotslist where id equals reservable id.
+        Spot spot = spots.get(reservableId);
+        if (spot.getClass().isAssignableFrom(BuildingSpot.class)) {
+            // If spot is buildingspot then reservable should be its placeable
+            if (spot.getPlaceable() instanceof Reservable) {
+                return (Reservable) spot.getPlaceable();
+            } else {
+                System.out.println("The placeable of this spot cannot be reserved.");
+                return null;
+            }
+        }
+        // Else spot is bringablespot which makes reservable the spot itself.
+        return (Reservable) spot;
     }
 
     /**
@@ -104,6 +191,7 @@ public class Blueprint {
         JsonParser parser = new JsonParser();
         JsonArray jsonArray = null;
 
+        // Try to parse file to json array.
         try {
             JsonObject o = (JsonObject) parser.parse(new FileReader(file));
             jsonArray = o.get("spots").getAsJsonArray();
@@ -111,40 +199,41 @@ public class Blueprint {
             e.printStackTrace();
         }
 
-        int counter = 1;
-
         assert jsonArray != null;
+        // Loop through all reservations in json file if json array is not null.
         for (JsonElement element : jsonArray) {
             JsonObject elementObject = element.getAsJsonObject();
+            // Get id of spot
+            int id = elementObject.get("id").getAsInt();
+            // Get type of spot
             switch (elementObject.get("type").getAsString()) {
                 case "bringable" -> {
-                    spots.put(counter, new BringableSpot());
-                    spots.get(counter).setSpotNr(counter);
+                    // If type is bringable -> create bringablespot and set spotnr to id.
+                    spots.put(id, new BringableSpot());
+                    spots.get(id).setSpotNr(id);
                 }
                 case "building" -> {
-                    spots.put(counter, new BuildingSpot());
+                    // If type is building -> create buildingspot
+                    spots.put(id, new BuildingSpot());
+
+                    // Creates and sets placeable for spot
                     JsonObject placeable = (JsonObject) elementObject.get("placeable");
-                    switch (placeable.get("type").getAsString()) {
-                        case "house" -> spots.get(counter).setPlaceable(new House(placeable.get("name").getAsString()));
-                        case "tikitent" -> spots.get(counter).setPlaceable(new TikiTent(placeable.get("name").getAsString()));
-                        case "laundry" -> {
-                            spots.get(counter).setPlaceable(new Laundry(placeable.get("name").getAsString()));
-                            spots.get(counter).setState(new Reserved());
-                        }
-                        case "sanitair" -> {
-                            spots.get(counter).setPlaceable(new Sanitair(placeable.get("name").getAsString()));
-                            spots.get(counter).setState(new Reserved());
-                        }
-                        default -> {
-                        }
+                    String type = placeable.get("type").getAsString();
+                    spots.get(id).setPlaceable(type);
+
+                    // If type is laundry or sanitair state cannot be free
+                    if ("laundry".equals(type) || "sanitair".equals(type)) {
+                        spots.get(id).setState(new Reserved());
                     }
+
+                    // Sets placeable name
+                    String placeableName = placeable.get("name").getAsString();
+                    spots.get(id).getPlaceable().setName(placeableName);
                 }
                 default -> {
                 }
             }
-            counter++;
         }
-
     }
 
     /**
@@ -175,6 +264,10 @@ public class Blueprint {
             {
                 reservable = set.getKey().toString();
                 placeable = set.getValue().getPlaceable().getStyle();
+            }
+            if (set.getValue() == reservation.getReservable()){
+                reservable = set.getKey().toString();
+                placeable = reservation.getPlaceable().getType();
             }
         }
 

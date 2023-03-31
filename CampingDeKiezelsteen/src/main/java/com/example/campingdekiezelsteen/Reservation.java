@@ -59,4 +59,12 @@ public class Reservation {
     public void setId(String id) {
         this.id = id;
     }
+
+    public Placeable getPlaceable() {
+        return placeable;
+    }
+
+    public void setPlaceable(Placeable placeable) {
+        this.placeable = placeable;
+    }
 }

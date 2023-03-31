@@ -3,10 +3,13 @@ package com.example.campingdekiezelsteen.Adapter;
 import com.example.campingdekiezelsteen.*;
 
 import java.io.File;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.example.campingdekiezelsteen.State.Reserved;
+import com.google.gson.JsonObject;
 import org.w3c.dom.*;
 import javax.xml.parsers.*;
 import javax.xml.transform.Transformer;
@@ -48,28 +51,20 @@ public class BlueprintXMLAdapter {
                     spots.put(number, new BuildingSpot());
                     switch(element.getElementsByTagName("placeabletype").item(0).getTextContent()) {
                         case "house" -> {
-                            spots.get(number).setPlaceable(new House(
-                                    element.getElementsByTagName("name").item(0).getTextContent()
-                            ));
+                            spots.get(number).setPlaceable("house");
                             spots.get(number).setSpotNr(number);
                         }
                         case "tikitent" -> {
-                            spots.get(number).setPlaceable(new TikiTent(
-                                    element.getElementsByTagName("name").item(0).getTextContent()
-                            ));
+                            spots.get(number).setPlaceable("tikitent");
                             spots.get(number).setSpotNr(number);
                         }
                         case "laundry" -> {
-                            spots.get(number).setPlaceable(new Laundry(
-                                    element.getElementsByTagName("name").item(0).getTextContent()
-                            ));
+                            spots.get(number).setPlaceable("laundry");
                             spots.get(number).setState(new Reserved());
                             spots.get(number).setSpotNr(number);
                         }
                         case "sanitair" -> {
-                            spots.get(number).setPlaceable(new Sanitair(
-                                    element.getElementsByTagName("name").item(0).getTextContent()
-                            ));
+                            spots.get(number).setPlaceable("sanitair");
                             spots.get(number).setState(new Reserved());
                             spots.get(number).setSpotNr(number);
                         }
@@ -79,6 +74,7 @@ public class BlueprintXMLAdapter {
                 spots.put(number, new BringableSpot());
                 spots.get(number).setSpotNr(number);
             }
+            this.spots = spots;
             return spots;
 
         } catch (Exception e) {
@@ -87,6 +83,7 @@ public class BlueprintXMLAdapter {
     }
 
     public Map<Integer, Reservation> createReservationsFromXML(){
+
         Map<Integer, Reservation> reservations = new HashMap<Integer, Reservation>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 

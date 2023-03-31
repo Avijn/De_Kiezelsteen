@@ -1,9 +1,11 @@
 {
   "spots": [
     {
+      "id" : 1,
       "type": "bringable"
     },
     {
+      "id" : 2,
       "type": "building",
       "placeable": {
         "type": "house",
@@ -11,6 +13,7 @@
       }
     },
     {
+      "id" : 3,
       "type": "building",
       "placeable": {
         "type": "house",
@@ -18,6 +21,7 @@
       }
     },
     {
+      "id" : 4,
       "type": "building",
       "placeable": {
         "type": "sanitair",
@@ -25,6 +29,7 @@
       }
     },
     {
+      "id" : 5,
       "type": "building",
       "placeable": {
         "type": "laundry",
@@ -32,18 +37,23 @@
       }
     },
     {
+      "id" : 6,
       "type": "bringable"
     },
     {
+      "id" : 7,
       "type": "bringable"
     },
     {
+      "id" : 8,
       "type": "bringable"
     },
     {
+      "id" : 9,
       "type": "bringable"
     },
     {
+      "id" : 10,
       "type": "building",
       "placeable": {
         "type": "tikitent",
@@ -51,6 +61,7 @@
       }
     },
     {
+      "id" : 11,
       "type": "building",
       "placeable": {
         "type": "tikitent",
@@ -58,9 +69,43 @@
       }
     },
     {
+      "id" : 12,
       "type": "bringable"
     },
     {
+      "id" : 13,
+      "type": "building",
+      "placeable": {
+        "type": "tikitent",
+        "name": "De vlinderrups"
+      }
+    },
+    {
+      "id" : 14,
+      "type": "bringable"
+    },
+    {
+      "id" : 15,
+      "type": "bringable"
+    },
+    {
+      "id" : 16,
+      "type": "bringable"
+    },
+    {
+      "id" : 17,
+      "type": "building",
+      "placeable": {
+        "type": "tikitent",
+        "name": "Halsketting"
+      }
+    },
+    {
+      "id" : 18,
+      "type": "bringable"
+    },
+    {
+      "id" : 19,
       "type": "building",
       "placeable": {
         "type": "house",
@@ -68,16 +113,65 @@
       }
     },
     {
+      "id" : 20,
       "type": "bringable"
     },
     {
-      "type": "bringable"
-    },
-    {
+      "id" : 21,
       "type": "bringable"
     }
   ],
   "reservations": [
-    {}
+    {
+      "id": 1,
+      "mainbooker": "Chris Abel",
+      "arrivaldate" : "30-03-2023",
+      "departuredate" : "06-04-2023",
+      "reservable" : "3"
+    },
+    {
+      "id": 2,
+      "mainbooker": "Averie Hollins",
+      "arrivaldate" : "02-04-2023",
+      "departuredate" : "16-04-2023",
+      "reservable" : "6",
+      "placeable" : "camper"
+    },
+    {
+      "id": 3,
+      "mainbooker": "Liddy Grant",
+      "arrivaldate" : "22-03-2023",
+      "departuredate" : "05-04-2023",
+      "reservable" : "17"
+    },
+    {
+      "id": 4,
+      "mainbooker": "Newt Bailey",
+      "arrivaldate" : "27-03-2023",
+      "departuredate" : "06-04-2023",
+      "reservable" : "20",
+      "placeable" : "tent"
+    },
+    {
+      "id": 5,
+      "mainbooker": "Rollie Bardsley",
+      "arrivaldate" : "15-03-2023",
+      "departuredate" : "27-03-2023",
+      "reservable" : "19"
+    },
+    {
+      "id": 6,
+      "mainbooker": "Antonette Horton",
+      "arrivaldate" : "28-03-2023",
+      "departuredate" : "31-03-2023",
+      "reservable" : "19"
+    },
+    {
+      "id": 7,
+      "mainbooker": "Bodhi Beasley",
+      "arrivaldate" : "02-03-2023",
+      "departuredate" : "29-03-2023",
+      "reservable" : "13"
+    }
   ]
 }
