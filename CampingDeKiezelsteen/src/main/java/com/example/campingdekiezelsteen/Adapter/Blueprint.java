@@ -238,7 +238,7 @@ public class Blueprint {
     public void addReservationToJson(Reservation reservation){
         JsonParser parser = new JsonParser();
         JsonArray jsonArray = null;
-        JsonObject jsonObject= null;
+        JsonObject jsonObject = null;
         String reservable = "";
         String placeable = "";
         Gson gson = new GsonBuilder().setPrettyPrinting().create();

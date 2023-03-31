@@ -319,12 +319,20 @@ public class UserInterface extends Application {
                 // Else field is Choicebox and spot is instance of reservable.
                 if (spot instanceof Reservable) {
                     ChoiceBox<String> box = (ChoiceBox<String>) item;
-                    placeableType = box.getValue();
                     // Switch case for type of placeable.
                     switch (box.getValue()) {
-                        case "Camper" -> placeable = new Camper();
-                        case "Caravan" -> placeable = new Caravan();
-                        case "Tent" -> placeable = new Tent();
+                        case "Camper" -> {
+                            placeable = new Camper();
+                            placeableType = "camper";
+                        }
+                        case "Caravan" -> {
+                            placeable = new Caravan();
+                            placeableType = "caravan";
+                        }
+                        case "Tent" -> {
+                            placeable = new Tent();
+                            placeableType = "tent";
+                        }
                         default -> placeable = null;
                     }
 
@@ -347,7 +355,7 @@ public class UserInterface extends Application {
             // If reservable is not null create reservation with created variables.
             Reservation reservation = new Reservation(reservable, name, arrivalDate, departureDate, "#000" + camping.getOrderBook().getReservations().size(), placeable);
             // Add reservation to orderbook of camping.
-            camping.getOrderBook().addReservation(camping.getOrderBook().getReservations().size(), reservation);
+            camping.getOrderBook().addReservation(camping.getOrderBook().getReservations().size(), reservation, camping);
             // Shows popup with success message.
             showPopup("Reservering succesvol aangemaakt.", 3, true);
             // If reservation is during current day then change state to reserved and add placeable to spot.
