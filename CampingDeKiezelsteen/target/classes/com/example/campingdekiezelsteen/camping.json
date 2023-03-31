@@ -1,11 +1,11 @@
 {
   "spots": [
     {
-      "id" : 1,
+      "id": 1,
       "type": "bringable"
     },
     {
-      "id" : 2,
+      "id": 2,
       "type": "building",
       "placeable": {
         "type": "house",
@@ -13,7 +13,7 @@
       }
     },
     {
-      "id" : 3,
+      "id": 3,
       "type": "building",
       "placeable": {
         "type": "house",
@@ -21,7 +21,7 @@
       }
     },
     {
-      "id" : 4,
+      "id": 4,
       "type": "building",
       "placeable": {
         "type": "sanitair",
@@ -29,7 +29,7 @@
       }
     },
     {
-      "id" : 5,
+      "id": 5,
       "type": "building",
       "placeable": {
         "type": "laundry",
@@ -37,23 +37,23 @@
       }
     },
     {
-      "id" : 6,
+      "id": 6,
       "type": "bringable"
     },
     {
-      "id" : 7,
+      "id": 7,
       "type": "bringable"
     },
     {
-      "id" : 8,
+      "id": 8,
       "type": "bringable"
     },
     {
-      "id" : 9,
+      "id": 9,
       "type": "bringable"
     },
     {
-      "id" : 10,
+      "id": 10,
       "type": "building",
       "placeable": {
         "type": "tikitent",
@@ -61,7 +61,7 @@
       }
     },
     {
-      "id" : 11,
+      "id": 11,
       "type": "building",
       "placeable": {
         "type": "tikitent",
@@ -69,11 +69,11 @@
       }
     },
     {
-      "id" : 12,
+      "id": 12,
       "type": "bringable"
     },
     {
-      "id" : 13,
+      "id": 13,
       "type": "building",
       "placeable": {
         "type": "tikitent",
@@ -81,19 +81,19 @@
       }
     },
     {
-      "id" : 14,
+      "id": 14,
       "type": "bringable"
     },
     {
-      "id" : 15,
+      "id": 15,
       "type": "bringable"
     },
     {
-      "id" : 16,
+      "id": 16,
       "type": "bringable"
     },
     {
-      "id" : 17,
+      "id": 17,
       "type": "building",
       "placeable": {
         "type": "tikitent",
@@ -101,11 +101,11 @@
       }
     },
     {
-      "id" : 18,
+      "id": 18,
       "type": "bringable"
     },
     {
-      "id" : 19,
+      "id": 19,
       "type": "building",
       "placeable": {
         "type": "house",
@@ -113,35 +113,29 @@
       }
     },
     {
-      "id" : 20,
+      "id": 20,
       "type": "bringable"
     },
     {
-      "id" : 21,
+      "id": 21,
       "type": "bringable"
     }
   ],
   "reservations": [
     {
       "id": 1,
-      "mainbooker": {
-        "firstname" : "Chris",
-        "lastname" : "Abel"
-      },
-      "arrivaldate" : "30-03-2023",
-      "departuredate" : "06-04-2023",
-      "reservable" : "3"
+      "mainbooker": "Chris Abel",
+      "arrivaldate": "30-03-2023",
+      "departuredate": "06-04-2023",
+      "reservable": "3"
     },
     {
       "id": 2,
-      "mainbooker": {
-        "firstname" : "Averie",
-        "lastname" : "Hollins"
-      },
-      "arrivaldate" : "02-04-2023",
-      "departuredate" : "16-04-2023",
-      "reservable" : "6",
-      "placeable" : "camper"
+      "mainbooker": "Averie Hollins",
+      "arrivaldate": "02-04-2023",
+      "departuredate": "16-04-2023",
+      "reservable": "6",
+      "placeable": "camper"
     }
   ]
 }

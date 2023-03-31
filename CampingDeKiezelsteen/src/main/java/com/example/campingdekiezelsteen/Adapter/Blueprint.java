@@ -2,19 +2,19 @@ package com.example.campingdekiezelsteen.Adapter;
 
 import com.example.campingdekiezelsteen.*;
 import com.example.campingdekiezelsteen.State.Reserved;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.jar.JarOutputStream;
 
 public class Blueprint {
     private String background;
@@ -139,8 +139,9 @@ public class Blueprint {
             Placeable placeable = getPlaceable(elementObject);
 
             // Get name of main booker
-            JsonObject mainbooker = elementObject.get("mainbooker").getAsJsonObject();
-            String name = mainbooker.get("firstname").getAsString() + " " + mainbooker.get("lastname").getAsString();
+            //JsonObject mainbooker = elementObject.get("mainbooker").getAsJsonObject();
+            //String name = mainbooker.get("firstname").getAsString() + " " + mainbooker.get("lastname").getAsString();
+            String name = elementObject.get("mainbooker").getAsString();
 
             // Create reservation
             Reservation reservation = new Reservation(reservable, name, arrivaldate, departuredate, String.valueOf(id), placeable);
@@ -229,5 +230,60 @@ public class Blueprint {
                 }
             }
         }
+    }
+
+    /**
+     * Adds a reservation to the JSON file
+     * @param reservation the reservation that needs to be added to the JSON file
+     */
+    public void addReservationToJson(Reservation reservation){
+        JsonParser parser = new JsonParser();
+        JsonArray jsonArray = null;
+        JsonObject jsonObject= null;
+        String reservable = "";
+        String placeable = "";
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+        // Try to parse file to json array.
+        try {
+            jsonObject = (JsonObject) parser.parse(new FileReader(file));
+            jsonArray = jsonObject.get("reservations").getAsJsonArray();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        assert jsonArray != null;
+
+        for (Map.Entry<Integer, Spot> set: spots.entrySet())
+        {
+            System.out.println(set.getValue().getPlaceable());
+            System.out.println(reservation.getReservable());
+            if(set.getValue().getPlaceable() == reservation.getReservable())
+            {
+                System.out.println(set.getKey());
+                reservable = set.getKey().toString();
+                placeable = set.getValue().getPlaceable().getStyle();
+            }
+        }
+
+        String json = "{ \"id\" : "+ reservation.getId().toString() +
+                " , \"mainbooker\" : \""+ reservation.getCustomerName() +
+                "\", \"arrivaldate\" : \""+ reservation.getArrivaldate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")).toString() +
+                "\" , \"departuredate\" : \""+ reservation.getDeparturedate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")).toString()+
+                "\" , \"reservable\" : \"" + reservable +
+                "\" , \"placeable\" : \""+ placeable + "\" }";
+
+        try(FileWriter writer = new FileWriter(file.getPath()))
+        {
+            JsonObject jsonReservation = new Gson().fromJson(json, JsonObject.class);
+            jsonArray.add(jsonReservation);
+            jsonObject.add("reservations", jsonArray);
+
+            gson.toJson(jsonObject, writer);
+        } catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
     }
 }
