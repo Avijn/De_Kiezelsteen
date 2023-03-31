@@ -8,6 +8,7 @@ import com.example.campingdekiezelsteen.State.UnderMaintenance;
 import javafx.animation.FadeTransition;
 import javafx.animation.PauseTransition;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -49,15 +50,6 @@ public class UserInterface extends Application {
         Scene scene = new Scene(setupDesign(), 1000, 600);
         scene.getStylesheets().add(UserInterface.class.getResource("style.css").toExternalForm());
 
-//        CREATED FOR DAILY REFRESH, BUT NOT NECESSARY RIGHT NOW.
-//        LocalTime minutes = LocalTime.MIDNIGHT.minusSeconds(LocalTime.now().toSecondOfDay());
-//        Timer timer = new Timer();
-//        timer.schedule(new TimerTask(){
-//            public void run(){
-//                System.out.println("Im Running..."+minutes.toSecondOfDay() * 60 * 60 * 24);
-//            }
-//        }, new Date(), minutes.toSecondOfDay() * 60 * 60 * 24);
-
         stage.setScene(scene);
         // Disable resizable property.
         stage.resizableProperty().setValue(Boolean.FALSE);
@@ -65,6 +57,7 @@ public class UserInterface extends Application {
     }
 
     private HBox setupDesign() {
+
         HBox hBox = new HBox();
         hBox.setFillHeight(true);
         hBox.getChildren().add(setupGrid());
@@ -113,21 +106,25 @@ public class UserInterface extends Application {
 
         // Change state of sanitair and laundry according to amount of current reservations.
         if (spot.getPlaceable() != null && (spot.getPlaceable() instanceof Laundry || spot.getPlaceable() instanceof Sanitair)) {
-            // Standard time between cleanings is 12 hours, with every reservation thirty minutes will be subtracted.
-            int minutes = 720 - (30 * camping.getCurrentReservations());
-            ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-            Runnable runnable = new Runnable() {
-                @Override
-                public void run() {
-                    spot.setState(new UnderMaintenance());
-                    setButtonStyle(spot, button);
-                }
-            };
-            executorService.schedule(runnable, minutes, TimeUnit.MINUTES);
-            System.out.println(minutes);
+            needsCleaningCalculator(spot, button);
         }
 
         return button;
+    }
+
+    private void needsCleaningCalculator(Spot spot, Button button) {
+        // Standard time between cleanings is 12 hours, with every reservation thirty minutes will be subtracted.
+        int minutes = 720 - (30 * camping.getCurrentReservations());
+        ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                spot.setState(new UnderMaintenance());
+                setButtonStyle(spot, button);
+                needsCleaningCalculator(spot, button);
+            }
+        };
+        executorService.schedule(runnable, minutes, TimeUnit.MINUTES);
     }
 
     private VBox getPaneInfo(Spot spot, Button button) {
@@ -269,8 +266,7 @@ public class UserInterface extends Application {
 
         for (Reservation res : camping.getOrderBook().getReservations().values()) {
             if (res.getReservable() == spot || res.getReservable() == spot.getPlaceable()) {
-                if ((res.getArrivaldate().isBefore(arrivalDate) && res.getDeparturedate().isAfter(arrivalDate)) ||
-                        (res.getArrivaldate().isBefore(departureDate) && res.getDeparturedate().isAfter(departureDate))) {
+                if ((res.getArrivaldate().isBefore(arrivalDate) && res.getDeparturedate().isAfter(arrivalDate)) || (res.getArrivaldate().isBefore(departureDate) && res.getDeparturedate().isAfter(departureDate))) {
                     showPopup("Tijdens deze data staat er al een reservering gepland.", 3, false);
                     return;
                 }
