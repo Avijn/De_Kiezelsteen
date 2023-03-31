@@ -106,12 +106,11 @@ public class Blueprint {
         }
     }
 
-    //Todo : Its not possible to parse the LocalDate for some reason, its accessor in the library is private final
-    // We should probably change this to some other datatype for date
     public void createReservationsFromJson() {
         JsonParser parser = new JsonParser();
         JsonArray jsonArray = null;
 
+        // Try to parse file to json array.
         try {
             JsonObject o = (JsonObject) parser.parse(new FileReader(file));
             jsonArray = o.get("reservations").getAsJsonArray();
@@ -121,6 +120,7 @@ public class Blueprint {
 
 
         assert jsonArray != null;
+        // Loop through all reservations in json file if json array is not null.
         for (JsonElement element : jsonArray) {
             JsonObject elementObject = element.getAsJsonObject();
             // Formatter for date
@@ -132,30 +132,39 @@ public class Blueprint {
             LocalDate arrivaldate = LocalDate.parse(elementObject.get("arrivaldate").getAsString(), formatter);
             LocalDate departuredate = LocalDate.parse(elementObject.get("departuredate").getAsString(), formatter);
 
+            // Get reservable
             int reservableId = elementObject.get("reservable").getAsInt();
             Reservable reservable = getReservable(reservableId);
+            // Get placeable
             Placeable placeable = getPlaceable(elementObject);
 
+            // Get name of main booker
             JsonObject mainbooker = elementObject.get("mainbooker").getAsJsonObject();
             String name = mainbooker.get("firstname").getAsString() + " " + mainbooker.get("lastname").getAsString();
 
+            // Create reservation
             Reservation reservation = new Reservation(reservable, name, arrivaldate, departuredate, String.valueOf(id), placeable);
 
+            // Add reservation to list
             reservations.put(id, reservation);
         }
     }
 
     private Placeable getPlaceable(JsonObject object){
        if(object.has("placeable")) {
+           // If object has a placeable then create placeable for the given placeable type.
            String placeableType = object.get("placeable").getAsString();
            return spots.get(object.get("reservable").getAsInt()).createPlaceable(placeableType);
        }
+       // Else return null
        return null;
     }
 
     private Reservable getReservable(int reservableId) {
+        // Get spot from spotslist where id equals reservable id.
         Spot spot = spots.get(reservableId);
         if (spot.getClass().isAssignableFrom(BuildingSpot.class)) {
+            // If spot is buildingspot then reservable should be its placeable
             if (spot.getPlaceable() instanceof Reservable) {
                 return (Reservable) spot.getPlaceable();
             } else {
@@ -163,6 +172,7 @@ public class Blueprint {
                 return null;
             }
         }
+        // Else spot is bringablespot which makes reservable the spot itself.
         return (Reservable) spot;
     }
 
@@ -176,6 +186,7 @@ public class Blueprint {
         JsonParser parser = new JsonParser();
         JsonArray jsonArray = null;
 
+        // Try to parse file to json array.
         try {
             JsonObject o = (JsonObject) parser.parse(new FileReader(file));
             jsonArray = o.get("spots").getAsJsonArray();
@@ -184,21 +195,27 @@ public class Blueprint {
         }
 
         assert jsonArray != null;
+        // Loop through all reservations in json file if json array is not null.
         for (JsonElement element : jsonArray) {
             JsonObject elementObject = element.getAsJsonObject();
+            // Get id of spot
             int id = elementObject.get("id").getAsInt();
+            // Get type of spot
             switch (elementObject.get("type").getAsString()) {
                 case "bringable" -> {
+                    // If type is bringable -> create bringablespot and set spotnr to id.
                     spots.put(id, new BringableSpot());
                     spots.get(id).setSpotNr(id);
                 }
                 case "building" -> {
+                    // If type is building -> create buildingspot
                     spots.put(id, new BuildingSpot());
-                    JsonObject placeable = (JsonObject) elementObject.get("placeable");
 
                     // Creates and sets placeable for spot
+                    JsonObject placeable = (JsonObject) elementObject.get("placeable");
                     String type = placeable.get("type").getAsString();
                     spots.get(id).setPlaceable(type);
+
                     // If type is laundry or sanitair state cannot be free
                     if ("laundry".equals(type) || "sanitair".equals(type)) {
                         spots.get(id).setState(new Reserved());
