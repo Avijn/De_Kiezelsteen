@@ -266,10 +266,10 @@ public class Blueprint {
             }
         }
 
-        String json = "{ \"id\" : "+ reservation.getId().toString() +
-                " , \"mainbooker\" : \""+ reservation.getCustomerName() +
-                "\", \"arrivaldate\" : \""+ reservation.getArrivaldate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")).toString() +
-                "\" , \"departuredate\" : \""+ reservation.getDeparturedate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")).toString()+
+        String json = "{ \"id\" : \""+ reservation.getId().toString() +
+                "\" , \"mainbooker\" : \""+ reservation.getCustomerName() +
+                "\", \"arrivaldate\" : \""+ reservation.getArrivaldate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")) +
+                "\" , \"departuredate\" : \""+ reservation.getDeparturedate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")) +
                 "\" , \"reservable\" : \"" + reservable +
                 "\" , \"placeable\" : \""+ placeable + "\" }";
 
