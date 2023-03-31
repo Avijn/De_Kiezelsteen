@@ -24,7 +24,7 @@ import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
 
 public class UserInterface extends Application {
     private final Pane pane = new Pane();
@@ -40,7 +40,7 @@ public class UserInterface extends Application {
     public void start(Stage stage) {
         // Creates camping and gets spots from blueprint.
         camping = new Camping("De Kiezelsteen");
-        spotsList = new ArrayList<>(camping.getBlueprint().getSpots().values());
+        spotsList = new ArrayList<>(camping.getSpots().values());
 
         // Sets up scene.
         Scene scene = new Scene(setupDesign(), 1000, 600);
@@ -112,7 +112,7 @@ public class UserInterface extends Application {
     private VBox getPaneInfo(Spot spot, Button button) {
         // Creates info block
         VBox vBox = spot.getState().buttonClicked(spot);
-        if (spot.getState().getClass().isAssignableFrom(Reserved.class)){
+        if (spot.getState().getClass().isAssignableFrom(Reserved.class)) {
             if (!camping.getOrderBook().getReservations().isEmpty()) {
                 for (Reservation reservation : camping.getOrderBook().getReservations().values()) {
                     if (reservation.getReservable() == spot || reservation.getReservable() == spot.getPlaceable()) {
@@ -129,10 +129,22 @@ public class UserInterface extends Application {
                 // If state is under maintenance, then make button change state.
                 if (spot.getState().getClass().isAssignableFrom(UnderMaintenance.class)) {
                     State newState = new Free();
-                    if (spot.getPlaceable() != null && (spot.getPlaceable().getClass().isAssignableFrom(Laundry.class) || spot.getPlaceable().getClass().isAssignableFrom(Sanitair.class))) {
-                        newState = new Reserved();
+                    if (spot.getPlaceable()!= null) {
+                        if (spot.getPlaceable().getClass().isAssignableFrom(Laundry.class) || spot.getPlaceable().getClass().isAssignableFrom(Sanitair.class)) {
+                            newState = new Reserved();
+                        }
+                        for (Reservation res : camping.getOrderBook().getReservations().values()) {
+                            if (res.getReservable().equals(spot.getPlaceable())) {
+                                System.out.println("TOE NOU");
+                                if (res.getArrivaldate().isBefore(LocalDate.now()) && res.getDeparturedate().isAfter(LocalDate.now())) {
+                                    newState = new Reserved();
+                                }
+                            }
+                        }
                     }
                     // Changes state
+                    Building building = (Building) spot.getPlaceable();
+                    building.clean();
                     spot.changeState(newState);
                     showPopup("Status succesvol veranderd.", 3, true);
                     // Reloads button and info block
@@ -161,18 +173,8 @@ public class UserInterface extends Application {
     private void setButtonStyle(Spot spot, Button button) {
         // Clears all styles
         button.getStyleClass().clear();
-        // Adds standard style to all buttons
-        for (Reservation reservation : camping.getOrderBook().getReservations().values()) {
-            if (reservation.getReservable().equals(spot) || reservation.getReservable().equals(spot.getPlaceable())) {
-                if (reservation.getArrivaldate().isBefore(LocalDate.now()) && reservation.getDeparturedate().isAfter(LocalDate.now())) {
-                    if (spot.getClass().isAssignableFrom(BringableSpot.class)){
-                        spot.setPlaceable(reservation.getPlaceable().getType());
-                    }
-                    spot.setState(new Reserved());
-                }
-            }
-        }
 
+        // Adds standard style to all buttons
         button.getStyleClass().add("transparent");
 
         if (spot.getPlaceable() != null && spot.getPlaceable().getStyle() != "") {
@@ -245,7 +247,7 @@ public class UserInterface extends Application {
             }
         }
 
-        for(Reservation res : camping.getOrderBook().getReservations().values()){
+        for (Reservation res : camping.getOrderBook().getReservations().values()) {
             if (res.getReservable() == spot || res.getReservable() == spot.getPlaceable()) {
                 if ((res.getArrivaldate().isBefore(arrivalDate) && res.getDeparturedate().isAfter(arrivalDate)) ||
                         (res.getArrivaldate().isBefore(departureDate) && res.getDeparturedate().isAfter(departureDate))) {
