@@ -80,7 +80,12 @@
     </spots>
     <reservations>
         <reservation>
-
+            <id>1</id>
+            <mainbooker>Chris Abel</mainbooker>
+            <arrivaldate>30-03-2023</arrivaldate>
+            <departuredate>06-04-2023</departuredate>
+            <reservable>3</reservable>
+            <placeable>house</placeable>
         </reservation>
     </reservations>
 </xml>

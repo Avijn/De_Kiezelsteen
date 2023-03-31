@@ -27,7 +27,7 @@ public class Blueprint {
         this.spots = new HashMap<>();
         this.reservations = new HashMap<>();
         try {
-            this.file = new File(UserInterface.class.getResource("camping.json").toURI());
+            this.file = new File(UserInterface.class.getResource("camping.xml").toURI());
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -99,7 +99,8 @@ public class Blueprint {
                 }
                 case "xml" -> {
                     BlueprintXMLAdapter xmlAdapter = new BlueprintXMLAdapter();
-                    xmlAdapter.createSpotsFromXML(file);
+                    spots = xmlAdapter.createSpotsFromXML(file);
+                    xmlAdapter.createReservationsFromXML(file);
                 }
                 default -> System.out.println("File is not a xml or json file.");
             }
@@ -139,8 +140,6 @@ public class Blueprint {
             Placeable placeable = getPlaceable(elementObject);
 
             // Get name of main booker
-            //JsonObject mainbooker = elementObject.get("mainbooker").getAsJsonObject();
-            //String name = mainbooker.get("firstname").getAsString() + " " + mainbooker.get("lastname").getAsString();
             String name = elementObject.get("mainbooker").getAsString();
 
             // Create reservation
@@ -256,8 +255,6 @@ public class Blueprint {
 
         for (Map.Entry<Integer, Spot> set: spots.entrySet())
         {
-            System.out.println(set.getValue().getPlaceable());
-            System.out.println(reservation.getReservable());
             if(set.getValue().getPlaceable() == reservation.getReservable())
             {
                 System.out.println(set.getKey());
