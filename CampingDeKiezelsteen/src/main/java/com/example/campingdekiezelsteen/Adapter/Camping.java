@@ -56,7 +56,7 @@ public class Camping {
         for (Reservation reservation : orderBook.getReservations().values()) {
             for (Spot spot : blueprint.getSpots().values()) {
                 if (reservation.getReservable().equals(spot) || reservation.getReservable().equals(spot.getPlaceable())) {
-                    if (reservation.getArrivaldate().isBefore(LocalDate.now()) && reservation.getDeparturedate().isAfter(LocalDate.now())) {
+                    if (currentDay(reservation.getArrivaldate(), reservation.getDeparturedate())) {
                         if (spot.getClass().isAssignableFrom(BringableSpot.class)) {
                             spot.setPlaceable(reservation.getPlaceable().getType());
                         }
@@ -69,13 +69,12 @@ public class Camping {
 
 
     private void getMaintenanceStates() {
-        orderBook.getReservations().forEach((key, reservation) -> {
+        for (Reservation reservation : orderBook.getReservations().values()) {
             for (Spot spot : blueprint.getSpots().values()) {
                 if (reservation.getReservable().equals(spot.getPlaceable())) {
                     if (spot.getPlaceable() instanceof Building building) {
-                        if (reservation.getArrivaldate().isBefore(LocalDate.now()) && reservation.getDeparturedate().isBefore(LocalDate.now())) {
+                        if (reservation.getArrivaldate().isBefore(LocalDate.now())&& reservation.getDeparturedate().isBefore(LocalDate.now())) {
                             building.used();
-                            System.out.println(orderBook.getReservations());
                         }
                     }
                 }
@@ -83,6 +82,10 @@ public class Camping {
                     spot.setState(new UnderMaintenance());
                 }
             }
-        });
+        }
+    }
+
+    public Boolean currentDay(LocalDate arrivalDate, LocalDate departureDate) {
+        return (arrivalDate.isBefore(LocalDate.now()) || arrivalDate.isEqual(LocalDate.now())) && (departureDate.isAfter(LocalDate.now())) || departureDate.isEqual(LocalDate.now());
     }
 }

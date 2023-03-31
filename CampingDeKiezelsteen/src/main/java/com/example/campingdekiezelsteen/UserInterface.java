@@ -129,14 +129,13 @@ public class UserInterface extends Application {
                 // If state is under maintenance, then make button change state.
                 if (spot.getState().getClass().isAssignableFrom(UnderMaintenance.class)) {
                     State newState = new Free();
-                    if (spot.getPlaceable()!= null) {
+                    if (spot.getPlaceable() != null) {
                         if (spot.getPlaceable().getClass().isAssignableFrom(Laundry.class) || spot.getPlaceable().getClass().isAssignableFrom(Sanitair.class)) {
                             newState = new Reserved();
                         }
                         for (Reservation res : camping.getOrderBook().getReservations().values()) {
                             if (res.getReservable().equals(spot.getPlaceable())) {
-                                System.out.println("TOE NOU");
-                                if (res.getArrivaldate().isBefore(LocalDate.now()) && res.getDeparturedate().isAfter(LocalDate.now())) {
+                                if (camping.currentDay(res.getArrivaldate(), res.getDeparturedate())) {
                                     newState = new Reserved();
                                 }
                             }
@@ -265,7 +264,7 @@ public class UserInterface extends Application {
             // Shows popup with success message.
             showPopup("Reservering succesvol aangemaakt.", 3, true);
             // If reservation is during current day then change state to reserved and add placeable to spot.
-            if (reservation.getArrivaldate().isBefore(LocalDate.now()) && reservation.getDeparturedate().isAfter(LocalDate.now())) {
+            if (camping.currentDay(reservation.getArrivaldate(), reservation.getDeparturedate())) {
                 spot.setState(new Reserved());
                 if (!placeableType.equals("")) {
                     spot.setPlaceable(placeableType);
