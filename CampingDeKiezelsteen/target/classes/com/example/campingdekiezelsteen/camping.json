@@ -124,24 +124,54 @@
   "reservations": [
     {
       "id": 1,
-      "mainbooker": {
-        "firstname" : "Chris",
-        "lastname" : "Abel"
-      },
+      "mainbooker": "Chris Abel",
       "arrivaldate" : "30-03-2023",
       "departuredate" : "06-04-2023",
       "reservable" : "3"
     },
     {
       "id": 2,
-      "mainbooker": {
-        "firstname" : "Averie",
-        "lastname" : "Hollins"
-      },
+      "mainbooker": "Averie Hollins",
       "arrivaldate" : "02-04-2023",
       "departuredate" : "16-04-2023",
       "reservable" : "6",
       "placeable" : "camper"
+    },
+    {
+      "id": 3,
+      "mainbooker": "Liddy Grant",
+      "arrivaldate" : "22-03-2023",
+      "departuredate" : "05-04-2023",
+      "reservable" : "17"
+    },
+    {
+      "id": 4,
+      "mainbooker": "Newt Bailey",
+      "arrivaldate" : "27-03-2023",
+      "departuredate" : "06-04-2023",
+      "reservable" : "20",
+      "placeable" : "tent"
+    },
+    {
+      "id": 5,
+      "mainbooker": "Rollie Bardsley",
+      "arrivaldate" : "15-03-2023",
+      "departuredate" : "27-03-2023",
+      "reservable" : "19"
+    },
+    {
+      "id": 6,
+      "mainbooker": "Antonette Horton",
+      "arrivaldate" : "28-03-2023",
+      "departuredate" : "31-03-2023",
+      "reservable" : "19"
+    },
+    {
+      "id": 7,
+      "mainbooker": "Bodhi Beasley",
+      "arrivaldate" : "02-03-2023",
+      "departuredate" : "29-03-2023",
+      "reservable" : "13"
     }
   ]
 }
