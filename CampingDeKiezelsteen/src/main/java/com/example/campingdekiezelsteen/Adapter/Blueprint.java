@@ -27,7 +27,7 @@ public class Blueprint {
         this.spots = new HashMap<>();
         this.reservations = new HashMap<>();
         try {
-            this.file = new File(UserInterface.class.getResource("camping.xml").toURI());
+            this.file = new File(UserInterface.class.getResource("camping.json").toURI());
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -259,7 +259,10 @@ public class Blueprint {
             {
                 System.out.println(set.getKey());
                 reservable = set.getKey().toString();
-                placeable = set.getValue().getPlaceable().getStyle();
+            }
+            if (set.getValue() == reservation.getReservable()){
+                reservable = set.getKey().toString();
+                placeable = reservation.getPlaceable().getType();
             }
         }
 
