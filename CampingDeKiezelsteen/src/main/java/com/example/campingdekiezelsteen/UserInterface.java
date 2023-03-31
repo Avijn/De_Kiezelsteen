@@ -254,7 +254,7 @@ public class UserInterface extends Application {
 
         if (reservable != null) {
             // If reservable is not null create reservation with created variables.
-            Reservation reservation = new Reservation(reservable, name, arrivalDate, departureDate, "#" + spot.getSpotNr() + camping.getOrderBook().getReservations().size(), placeable);
+            Reservation reservation = new Reservation(reservable, name, arrivalDate, departureDate, "#000" + camping.getOrderBook().getReservations().size(), placeable);
             // Add reservation to orderbook of camping.
             camping.getOrderBook().addReservation(camping.getOrderBook().getReservations().size(), reservation);
             // Shows popup with success message.

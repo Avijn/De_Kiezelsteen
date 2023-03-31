@@ -13,6 +13,10 @@ public class OrderBook {
         reservations.put(id, reservation);
     }
 
+    public void setReservations(Map<Integer, Reservation> reservations) {
+        this.reservations = reservations;
+    }
+
     public Map<Integer, Reservation> getReservations() {
         return reservations;
     }

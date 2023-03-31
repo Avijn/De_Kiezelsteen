@@ -12,14 +12,14 @@ import java.util.Map;
 
 public class Camping {
     private Blueprint blueprint;
-    private OrderBook orderBook = new OrderBook();
+    private OrderBook orderBook;
     private String name;
 
     public Camping(String name)
     {
         blueprint = new Blueprint("bluePrint");
-        System.out.println(name);
-//        addSpots();
+        orderBook  = new OrderBook();
+        orderBook.setReservations(blueprint.getReservations());
     }
 
     public Blueprint getBlueprint() {
