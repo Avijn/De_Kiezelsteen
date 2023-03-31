@@ -165,6 +165,9 @@ public class UserInterface extends Application {
         for (Reservation reservation : camping.getOrderBook().getReservations().values()) {
             if (reservation.getReservable().equals(spot) || reservation.getReservable().equals(spot.getPlaceable())) {
                 if (reservation.getArrivaldate().isBefore(LocalDate.now()) && reservation.getDeparturedate().isAfter(LocalDate.now())) {
+                    if (spot.getClass().isAssignableFrom(BringableSpot.class)){
+                        spot.setPlaceable(reservation.getPlaceable().getType());
+                    }
                     spot.setState(new Reserved());
                 }
             }
