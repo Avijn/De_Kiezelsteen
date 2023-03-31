@@ -8,7 +8,6 @@ import com.example.campingdekiezelsteen.State.UnderMaintenance;
 import javafx.animation.FadeTransition;
 import javafx.animation.PauseTransition;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -25,6 +24,7 @@ import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -33,6 +33,7 @@ import java.util.concurrent.TimeUnit;
 public class UserInterface extends Application {
     private final Pane pane = new Pane();
     private final GridPane gridPane = new GridPane();
+    private final Pane reservationsPane = new Pane();
     private Camping camping;
     private ArrayList<Spot> spotsList = new ArrayList<>();
 
@@ -57,12 +58,10 @@ public class UserInterface extends Application {
     }
 
     private HBox setupDesign() {
-
         HBox hBox = new HBox();
         hBox.setFillHeight(true);
         hBox.getChildren().add(setupGrid());
-        pane.getStyleClass().add("infoBlock");
-        hBox.getChildren().add(pane);
+        hBox.getChildren().add(setupRightBlock());
         return hBox;
     }
 
@@ -102,6 +101,7 @@ public class UserInterface extends Application {
         // Shows infoblock when button is clicked
         button.setOnMouseClicked(e -> {
             loadPane(getPaneInfo(spot, button));
+            getReservationsInfo(spot);
         });
 
         // Change state of sanitair and laundry according to amount of current reservations.
@@ -125,6 +125,31 @@ public class UserInterface extends Application {
             }
         };
         executorService.schedule(runnable, minutes, TimeUnit.MINUTES);
+    }
+
+    private Accordion setupRightBlock() {
+        // Create accordion.
+        Accordion accordion = new Accordion();
+        accordion.setMinWidth(300);
+        // Set styles of child panes.
+        pane.getStyleClass().add("infoBlock");
+        reservationsPane.getStyleClass().add("infoBlock");
+        // Create titledpanes with child panes.
+        TitledPane pane1 = new TitledPane("Info", pane);
+        TitledPane pane2 = new TitledPane("Reserveringen", reservationsPane);
+        // Add child panes to accordion.
+        accordion.getPanes().add(pane1);
+        accordion.getPanes().add(pane2);
+        // Set top pane to expanded.
+        accordion.setExpandedPane(pane1);
+        return accordion;
+    }
+
+    private void loadPane(VBox vBox) {
+        // Clears infoblock
+        pane.getChildren().clear();
+        // Adds right info in infoblock
+        pane.getChildren().add(vBox);
     }
 
     private VBox getPaneInfo(Spot spot, Button button) {
@@ -180,11 +205,56 @@ public class UserInterface extends Application {
         return vBox;
     }
 
-    private void loadPane(VBox vBox) {
-        // Clears infoblock
-        pane.getChildren().clear();
-        // Adds right info in infoblock
-        pane.getChildren().add(vBox);
+    private void getReservationsInfo(Spot spot) {
+        // Clear out the pane.
+        reservationsPane.getChildren().clear();
+        // Create new accordion for all reservations.
+        Accordion accordion = new Accordion();
+        accordion.setPadding(new Insets(20));
+        // Get all reservations with this spot.
+        for (Reservation res : camping.getOrderBook().getReservations().values()) {
+            if (res.getReservable() == spot || res.getReservable() == spot.getPlaceable()) {
+                // Create pane and titledpane for each reservation.
+                Pane pane = new Pane();
+                pane.getStyleClass().add("infoBlock");
+                // Set pane content with info of reservation.
+                pane.getChildren().add(getInfo(res));
+                TitledPane titledPane = new TitledPane(res.getId(), pane);
+                // Add titledpane to accordion.
+                accordion.getPanes().add(titledPane);
+            }
+        }
+        // Add accordion to pane.
+        reservationsPane.getChildren().add(accordion);
+    }
+
+    private VBox getInfo(Reservation reservation) {
+        VBox vBox = new VBox();
+        vBox.setPadding(new Insets(20));
+        // Formatter for dates.
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy");
+        // Get name, arrivaldate and departuredate from reservation.
+        vBox.getChildren().add(getSingularLine("Hoofdboeker: ", reservation.getCustomerName()));
+        vBox.getChildren().add(getSingularLine("Aankomstdatum: ", reservation.getArrivaldate().format(formatter)));
+        vBox.getChildren().add(getSingularLine("Vertrekdatum: ", reservation.getDeparturedate().format(formatter)));
+        return vBox;
+    }
+
+    private HBox getSingularLine(String title, String info) {
+        HBox hBox = new HBox();
+        hBox.setPadding(new Insets(20, 0, 0, 0));
+        // Create title and set style
+        Label Title = new Label(title);
+        Title.setPrefWidth(130);
+        Title.getStyleClass().add("info-text");
+        // Create infotext and set style
+        Label Info = new Label(info);
+        Info.setPrefWidth(130);
+        Info.getStyleClass().add("info-text");
+        // Add both to hbox.
+        hBox.getChildren().add(Title);
+        hBox.getChildren().add(Info);
+        return hBox;
     }
 
     private void setButtonStyle(Spot spot, Button button) {
