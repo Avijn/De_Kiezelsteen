@@ -9,19 +9,17 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.net.URISyntaxException;
-import java.time.format.DateTimeFormatter;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.jar.JarOutputStream;
 
 public class Blueprint {
     private String background;
     private Map<Integer, Spot> spots;
     private Map<Integer, Reservation> reservations;
     private File file = new File("");
+    private BlueprintXMLAdapter xmlAdapter;
 
     public Blueprint(String background) {
         this.background = background;
@@ -32,6 +30,7 @@ public class Blueprint {
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
+        xmlAdapter = new BlueprintXMLAdapter(file);
         createSpotsAndGetReservations();
     }
 
@@ -100,7 +99,6 @@ public class Blueprint {
                     createReservationsFromJson();
                 }
                 case "xml" -> {
-                    BlueprintXMLAdapter xmlAdapter = new BlueprintXMLAdapter(file);
                     spots = xmlAdapter.createSpotsFromXML();
                     reservations = xmlAdapter.createReservationsFromXML();
                     xmlAdapter.addReservationsToXML(reservations.get(1));
@@ -155,14 +153,14 @@ public class Blueprint {
         }
     }
 
-    private Placeable getPlaceable(JsonObject object){
-       if(object.has("placeable")) {
-           // If object has a placeable then create placeable for the given placeable type.
-           String placeableType = object.get("placeable").getAsString();
-           return spots.get(object.get("reservable").getAsInt()).createPlaceable(placeableType);
-       }
-       // Else return null
-       return null;
+    private Placeable getPlaceable(JsonObject object) {
+        if (object.has("placeable")) {
+            // If object has a placeable then create placeable for the given placeable type.
+            String placeableType = object.get("placeable").getAsString();
+            return spots.get(object.get("reservable").getAsInt()).createPlaceable(placeableType);
+        }
+        // Else return null
+        return null;
     }
 
     private Reservable getReservable(int reservableId) {
@@ -236,11 +234,24 @@ public class Blueprint {
         }
     }
 
+    public void addReservationToFile(Reservation reservation) {
+        switch (getFileExtension(file)) {
+            case "json" -> {
+                addReservationToJson(reservation);
+            }
+            case "xml" -> {
+                xmlAdapter.addReservationsToXML(reservation);
+            }
+            default -> System.out.println("File is not a xml or json file.");
+        }
+    }
+
     /**
      * Adds a reservation to the JSON file
+     *
      * @param reservation the reservation that needs to be added to the JSON file
      */
-    public void addReservationToJson(Reservation reservation){
+    private void addReservationToJson(Reservation reservation) {
         JsonParser parser = new JsonParser();
         JsonArray jsonArray = null;
         JsonObject jsonObject = null;
@@ -258,35 +269,31 @@ public class Blueprint {
 
         assert jsonArray != null;
 
-        for (Map.Entry<Integer, Spot> set: spots.entrySet())
-        {
-            if(set.getValue().getPlaceable() == reservation.getReservable())
-            {
+        for (Map.Entry<Integer, Spot> set : spots.entrySet()) {
+            if (set.getValue().getPlaceable() == reservation.getReservable()) {
                 reservable = set.getKey().toString();
                 placeable = set.getValue().getPlaceable().getStyle();
             }
-            if (set.getValue() == reservation.getReservable()){
+            if (set.getValue() == reservation.getReservable()) {
                 reservable = set.getKey().toString();
                 placeable = reservation.getPlaceable().getType();
             }
         }
 
-        String json = "{ \"id\" : \""+ reservation.getId().toString() +
-                "\" , \"mainbooker\" : \""+ reservation.getCustomerName() +
-                "\", \"arrivaldate\" : \""+ reservation.getArrivaldate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")) +
-                "\" , \"departuredate\" : \""+ reservation.getDeparturedate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")) +
+        String json = "{ \"id\" : \"" + reservation.getId().toString() +
+                "\" , \"mainbooker\" : \"" + reservation.getCustomerName() +
+                "\", \"arrivaldate\" : \"" + reservation.getArrivaldate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")) +
+                "\" , \"departuredate\" : \"" + reservation.getDeparturedate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")) +
                 "\" , \"reservable\" : \"" + reservable +
-                "\" , \"placeable\" : \""+ placeable + "\" }";
+                "\" , \"placeable\" : \"" + placeable + "\" }";
 
-        try(FileWriter writer = new FileWriter(file.getPath()))
-        {
+        try (FileWriter writer = new FileWriter(file.getPath())) {
             JsonObject jsonReservation = new Gson().fromJson(json, JsonObject.class);
             jsonArray.add(jsonReservation);
             jsonObject.add("reservations", jsonArray);
 
             gson.toJson(jsonObject, writer);
-        } catch(Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

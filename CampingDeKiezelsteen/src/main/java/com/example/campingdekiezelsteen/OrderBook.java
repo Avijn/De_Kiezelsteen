@@ -13,7 +13,7 @@ public class OrderBook {
 
     public void addReservation(int id, Reservation reservation, Camping camping){
         reservations.put(id, reservation);
-        camping.getBlueprint().addReservationToJson(reservation);
+        camping.getBlueprint().addReservationToFile(reservation);
     }
 
     public void setReservations(Map<Integer, Reservation> reservations) {
