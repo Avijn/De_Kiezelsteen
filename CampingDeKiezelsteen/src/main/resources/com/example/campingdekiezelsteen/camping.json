@@ -138,10 +138,31 @@
         "firstname" : "Averie",
         "lastname" : "Hollins"
       },
-      "arrivaldate" : "02-04-2023",
+      "arrivaldate" : "22-03-2023",
       "departuredate" : "16-04-2023",
       "reservable" : "6",
       "placeable" : "camper"
+    },
+    {
+      "id": 3,
+      "mainbooker": {
+        "firstname" : "Liddy",
+        "lastname" : "Grant"
+      },
+      "arrivaldate" : "22-03-2023",
+      "departuredate" : "05-04-2023",
+      "reservable" : "17"
+    },
+    {
+      "id": 4,
+      "mainbooker": {
+        "firstname" : "Newt",
+        "lastname" : "Bailey"
+      },
+      "arrivaldate" : "27-03-2023",
+      "departuredate" : "06-04-2023",
+      "reservable" : "20",
+      "placeable" : "tent"
     }
   ]
 }
