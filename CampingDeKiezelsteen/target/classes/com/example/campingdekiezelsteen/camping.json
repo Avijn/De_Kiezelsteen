@@ -127,7 +127,8 @@
       "mainbooker": "Chris Abel",
       "arrivaldate" : "30-03-2023",
       "departuredate" : "06-04-2023",
-      "reservable" : "3"
+      "reservable" : "3",
+      "placeable" : "house"
     },
     {
       "id": 2,
